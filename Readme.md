@@ -1,5 +1,3 @@
-Based on the document **"FULL FEATURE FLOW with NAVIGATION CUES"**, here's a structured and professional **README** file you can use to describe the frontend, backend, and full application flow of your gardening app project.
-
 ---
 
 # 🌱 Gardening App — Full Stack Feature Flow
@@ -15,7 +13,7 @@ This application is a feature-rich gardening assistant that helps users manage t
 ```plaintext
 project-root/
 │
-├── frontend/          # React Native or Flutter UI code
+├── frontend/          # React Native  UI code
 ├── backend/           # API, DB, authentication services
 ├── README.md          # This file
 └── ...
