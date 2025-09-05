@@ -26,7 +26,7 @@ project-root/
 ### Frontend:
 
 ```bash
-cd frontend
+cd client
 npm install
 npm run dev
 ```
@@ -34,7 +34,7 @@ npm run dev
 ### Backend:
 
 ```bash
-cd backend
+cd server
 npm install
 npm run dev
 ```
