@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* src/index.css */
+@import './styles/design-system.css';
+@import './styles/base.css';
+@import './styles/components.css';
+
+/* Global styles */
+#root {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Senior-friendly enhancements */
+.senior-mode {
+  --button-height: 56px;
+  --input-height: 56px;
+  --font-size-body: 18px;
+}
+
+.senior-mode .btn {
+  min-height: 56px;
+  min-width: 120px;
+}
+
+.senior-mode .input {
+  font-size: 18px;
+}
+
+/* High contrast enhancements */
+.high-contrast {
+  --color-border-gray: #000000;
+  --color-primary: #006e44;
+}
+
+.high-contrast .btn {
+  border: 2px solid currentColor;
+}
+
+.high-contrast .card {
+  border: 2px solid var(--color-border-gray);
+}
