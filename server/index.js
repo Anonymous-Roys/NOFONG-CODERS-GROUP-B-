@@ -23,7 +23,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:5173", // frontend (Vite default port)
+    origin: "http://localhost:5173", 
     credentials: true, // allow cookies (JWT in cookies)
   })
 );
@@ -50,8 +50,8 @@ app.get("/protected", authenticateToken, (req, res) => {
 
 // ===== Feature Routes =====
 app.use("/api/home", authenticateToken, homeRoutes);
-app.use("/api/plant", plantRoutes); // 🔒 protected now
-app.use("/api/task", authenticateToken, taskRoutes);
+app.use("/api/plant", plantRoutes); 
+app.use("/api/tasks", taskRoutes);
 
 // ===== Error Handling =====
 app.use((err, req, res, next) => {
