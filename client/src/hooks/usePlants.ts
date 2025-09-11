@@ -6,21 +6,57 @@ import type { Plant } from '../types';
 const mockPlants: Plant[] = [
   {
     id: '1',
-    name: 'Snake Plant',
-    species: 'Sansevieria trifasciata',
+    name: 'Maize',
+    species: 'Zea mays',
     careLevel: 'easy',
-    waterFrequency: 14,
+    waterFrequency: 3,
     lastWatered: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 7 days ago
     nextWatering: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
   },
   {
     id: '2',
-    name: 'Peace Lily',
-    species: 'Spathiphyllum',
+    name: 'Tomato',
+    species: 'Solanum lycopersicum',
     careLevel: 'medium',
-    waterFrequency: 7,
+    waterFrequency: 2,
     lastWatered: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
     nextWatering: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 days from now
+  },
+  {
+    id: '3',
+    name: 'Tomato',
+    species: 'Solanum lycopersicum',
+    careLevel: 'medium',
+    waterFrequency: 2,
+    lastWatered: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+    nextWatering: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+  },
+  {
+    id: '4',
+    name: 'Tomato',
+    species: 'Solanum lycopersicum',
+    careLevel: 'medium',
+    waterFrequency: 2,
+    lastWatered: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+    nextWatering: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+  },
+  {
+    id: '5',
+    name: 'Tomato',
+    species: 'Solanum lycopersicum',
+    careLevel: 'medium',
+    waterFrequency: 2,
+    lastWatered: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+    nextWatering: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+  },
+  {
+    id: '6',
+    name: 'Tomato',
+    species: 'Solanum lycopersicum',
+    careLevel: 'medium',
+    waterFrequency: 2,
+    lastWatered: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
+    nextWatering: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
   },
 ];
 

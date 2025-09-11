@@ -22,6 +22,14 @@ export interface BaseComponentProps {
     type: 'water' | 'fertilize' | 'prune' | 'repot';
     dueDate: Date;
     completed: boolean;
+    isLate?: boolean;
+    daysLate?: number;
+  }
+
+  export interface TaskType {
+    id: 'water' | 'fertilize' | 'prune' | 'repot';
+    label: string;
+    icon: string;
   }
   
   // User types

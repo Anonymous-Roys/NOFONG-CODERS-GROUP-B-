@@ -7,6 +7,7 @@ import JournalPage from './pages/JournalPage/JournalPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import AddPlantPage from './pages/AddPlantPage/AddPlantPage';
 import AddTaskPage from './pages/AddTaskPage/AddTaskPage';
+import { TaskManager } from './pages/TaskManager/TaskManager';
 import HomePage from './pages/Homepage/Homepage';
 import './styles/design-system.css'
 import './styles/base.css';
@@ -26,6 +27,7 @@ function App() {
           <Route path="profile" element={<ProfilePage />} />
           <Route path="plants/add" element={<AddPlantPage />} />
           <Route path="tasks/add" element={<AddTaskPage />} />
+          <Route path="tasks" element={<TaskManager />} />
         </Route>
       </Routes>
     </Router>

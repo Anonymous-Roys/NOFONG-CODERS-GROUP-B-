@@ -1,6 +1,6 @@
 // src/components/layout/BottomNavigation.tsx
 import React from 'react';
-import { Home, Book, PenTool, User, Plus } from 'lucide-react';
+import { Home, Leaf, User, BookOpen, PenTool } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const BottomNavigation: React.FC = () => {
@@ -8,8 +8,8 @@ const BottomNavigation: React.FC = () => {
   const navigate = useNavigate();
 
   const navigationItems = [
-    { path: '/garden', icon: Plus, label: 'My Garden' },
-    { path: '/plants', icon: Book, label: 'Plant Library' },
+    { path: '/garden', icon: Leaf, label: 'My Garden' },
+    { path: '/plants', icon: BookOpen, label: 'Plant library' },
     { path: '/', icon: Home, label: 'Home' },
     { path: '/journal', icon: PenTool, label: 'Journal' },
     { path: '/profile', icon: User, label: 'Profile' },
@@ -23,30 +23,47 @@ const BottomNavigation: React.FC = () => {
   };
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 shadow-lg">
-      <div className="flex items-center justify-between">
-        {navigationItems.map((item) => {
-          const Icon = item.icon;
-          const active = isActive(item.path);
+    <>
+      {/* Bottom Navigation */}
+      <nav className="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-lg">
+        {/* Purple accent line */}
+        <div className="h-1 bg-purple-500 w-full"></div>
+        
+        <div className="flex items-center justify-around px-2 py-3">
+          {navigationItems.map((item) => {
+            const Icon = item.icon;
+            const active = isActive(item.path);
+            
+            return (
+              <button
+                key={item.path}
+                onClick={() => navigate(item.path)}
+                className={`flex flex-col items-center gap-1 p-2 transition-all duration-200 min-w-[60px] ${
+                  active ? 'text-green-600' : 'text-black hover:text-gray-600'
+                }`}
+                aria-label={item.label}
+              >
+                <div className={`w-8 h-8 flex items-center justify-center transition-all duration-200 ${
+                  active 
+                    ? 'bg-green-600 rounded-full shadow-lg' 
+                    : ''
+                }`}>
+                  <Icon className={`w-5 h-5 ${
+                    active ? 'text-white' : 'text-black'
+                  }`} />
+                </div>
+                <span className={`text-xs font-medium ${
+                  active ? 'text-green-600' : 'text-black'
+                }`}>
+                  {item.label}
+                </span>
+              </button>
+            );
+          })}
           
-          return (
-            <button
-              key={item.path}
-              onClick={() => navigate(item.path)}
-              className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-colors min-w-[60px] ${
-                active
-                  ? 'text-green-600 bg-green-50'
-                  : 'text-gray-500 hover:text-green-600'
-              }`}
-              aria-label={item.label}
-            >
-              <Icon className="w-6 h-6" />
-              <span className="text-xs font-medium">{item.label}</span>
-            </button>
-          );
-        })}
-      </div>
-    </nav>
+        </div>
+      </nav>
+    </>
   );
 };
 
