@@ -4,40 +4,43 @@
   }
   
   body {
-    font-family: var(--font-family);
+    font-family: var(--font-family-body);
     font-size: var(--font-size-body);
-    line-height: 1.6;
-    color: var(--color-black);
-    background-color: var(--color-light-gray);
+    line-height: 1;
+    color: var(--color-text-strong);
+    background-color: var(--color-white);
     margin: 0;
     padding: 0;
   }
   
   /* Typography */
   h1 {
+    font-family: var(--font-family-heading);
     font-size: var(--font-size-h1);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
     margin: 0 0 var(--spacing-md);
-    color: var(--color-black);
+    color: var(--color-text-strong);
   }
   
   h2 {
+    font-family: var(--font-family-heading);
     font-size: var(--font-size-h2);
     font-weight: var(--font-weight-semibold);
     margin: 0 0 var(--spacing-md);
-    color: var(--color-black);
+    color: var(--color-text-strong);
   }
   
   h3 {
+    font-family: var(--font-family-heading);
     font-size: var(--font-size-h3);
     font-weight: var(--font-weight-semibold);
     margin: 0 0 var(--spacing-sm);
-    color: var(--color-black);
+    color: var(--color-text-strong);
   }
   
   p {
     margin: 0 0 var(--spacing-md);
-    color: var(--color-black);
+    color: var(--color-text-strong);
   }
   
   .text-body-large {

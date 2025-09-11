@@ -1,103 +1,32 @@
 // src/pages/PlantsPage/PlantsPage.tsx
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Search, Filter, Heart, ArrowRight, Menu, Bell } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
-
-interface Plant {
-  id: string;
-  name: string;
-  description: string;
-  imageUrl: string;
-  difficulty: 'Easy' | 'Medium' | 'Hard';
-  category: 'All' | 'Outdoor' | 'Indoor';
-  isFavorite?: boolean;
-}
+import { usePlants } from '../../hooks/usePlants';
 
 const PlantsPage: React.FC = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<'All' | 'Outdoor' | 'Indoor'>('All');
-
-  const plants: Plant[] = [
-    {
-      id: '1',
-      name: 'Aloe Vera',
-      description: 'Easy to care for, great for beginners',
-      imageUrl: 'https://images.unsplash.com/photo-1509587584298-0f3b3a3a1797?w=200&h=200&fit=crop&crop=center',
-      difficulty: 'Easy',
-      category: 'Indoor',
-      isFavorite: false
-    },
-    {
-      id: '2',
-      name: 'Snake Plant',
-      description: 'Thrives in low light conditions',
-      imageUrl: 'https://images.unsplash.com/photo-1600411833196-7c1f6b1a8b90?w=200&h=200&fit=crop&crop=center',
-      difficulty: 'Easy',
-      category: 'Indoor',
-      isFavorite: true
-    },
-    {
-      id: '3',
-      name: 'Pothos',
-      description: 'Fast-growing trailing plant',
-      imageUrl: 'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?w=200&h=200&fit=crop&crop=center',
-      difficulty: 'Easy',
-      category: 'Indoor',
-      isFavorite: false
-    },
-    {
-      id: '4',
-      name: 'ZZ Plant',
-      description: 'Drought tolerant and low maintenance',
-      imageUrl: 'https://images.unsplash.com/photo-1632207691143-643e2a9a9361?w=200&h=200&fit=crop&crop=center',
-      difficulty: 'Easy',
-      category: 'Indoor',
-      isFavorite: false
-    },
-    {
-      id: '5',
-      name: 'Tomato Plant',
-      description: 'Popular outdoor vegetable plant',
-      imageUrl: 'https://images.unsplash.com/photo-1592841200221-21e1c0d36fb7?w=200&h=200&fit=crop&crop=center',
-      difficulty: 'Medium',
-      category: 'Outdoor',
-      isFavorite: true
-    },
-    {
-      id: '6',
-      name: 'Rose Bush',
-      description: 'Beautiful flowering outdoor plant',
-      imageUrl: 'https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=200&h=200&fit=crop&crop=center',
-      difficulty: 'Medium',
-      category: 'Outdoor',
-      isFavorite: false
-    },
-    {
-      id: '7',
-      name: 'Fiddle Leaf Fig',
-      description: 'Popular statement plant for modern homes',
-      imageUrl: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&h=200&fit=crop&crop=center',
-      difficulty: 'Medium',
-      category: 'Indoor',
-      isFavorite: false
-    },
-    {
-      id: '8',
-      name: 'Monstera Deliciosa',
-      description: 'Large tropical plant with split leaves',
-      imageUrl: 'https://images.unsplash.com/photo-1509423350716-97f2360af5e0?w=200&h=200&fit=crop&crop=center',
-      difficulty: 'Medium',
-      category: 'Indoor',
-      isFavorite: true
-    }
-  ];
+  const { plants, loading, error } = usePlants();
 
   const filteredPlants = plants.filter(plant => {
     const matchesSearch = plant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       plant.description.toLowerCase().includes(searchQuery.toLowerCase());
     
-    const matchesCategory = selectedCategory === 'All' || plant.category === selectedCategory;
+    // For now, we'll categorize based on plant type or care level
+    const isOutdoor = plant.plantType.toLowerCase().includes('outdoor') || 
+                     plant.plantType.toLowerCase().includes('crop') ||
+                     plant.careLevel === 'medium';
+    const isIndoor = plant.plantType.toLowerCase().includes('indoor') || 
+                    plant.plantType.toLowerCase().includes('succulent') ||
+                    plant.careLevel === 'easy';
+    
+    const matchesCategory = selectedCategory === 'All' || 
+      (selectedCategory === 'Outdoor' && isOutdoor) ||
+      (selectedCategory === 'Indoor' && isIndoor);
     
     return matchesSearch && matchesCategory;
   });
@@ -107,19 +36,38 @@ const PlantsPage: React.FC = () => {
     console.log('Toggle favorite for plant:', plantId);
   };
 
-  const handleViewDetails = (plant: Plant) => {
-    // In a real app, this would navigate to plant details
-    console.log('View details for plant:', plant.name);
-  };
-
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case 'Easy': return 'bg-green-100 text-green-800';
-      case 'Medium': return 'bg-yellow-100 text-yellow-800';
-      case 'Hard': return 'bg-red-100 text-red-800';
+  const getDifficultyColor = (careLevel: string) => {
+    switch (careLevel) {
+      case 'easy': return 'bg-green-100 text-green-800';
+      case 'medium': return 'bg-yellow-100 text-yellow-800';
+      case 'difficult': return 'bg-red-100 text-red-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-4 border-green-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading plants...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">{error}</p>
+          <Button onClick={() => window.location.reload()} variant="primary">
+            Try Again
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
@@ -179,31 +127,34 @@ const PlantsPage: React.FC = () => {
           {filteredPlants.map((plant) => (
             <div key={plant.id} className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
               <div className="relative mb-3">
-                <img 
-                  src={plant.imageUrl} 
-                  alt={plant.name}
-                  className="w-full h-32 rounded-lg object-cover"
-                />
+                {plant.imageUrl ? (
+                  <img 
+                    src={plant.imageUrl} 
+                    alt={plant.name}
+                    className="w-full h-32 rounded-lg object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-32 bg-green-100 rounded-lg flex items-center justify-center">
+                    <span className="text-4xl">🌿</span>
+                  </div>
+                )}
                 <button
                   onClick={() => handleToggleFavorite(plant.id)}
                   className="absolute top-2 right-2 p-1.5 bg-white rounded-full shadow-sm hover:bg-gray-50"
                 >
-                  <Heart 
-                    className={`w-4 h-4 ${
-                      plant.isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-400'
-                    }`} 
-                  />
+                  <Heart className="w-4 h-4 text-gray-400" />
                 </button>
               </div>
               
               <div className="space-y-2">
                 <h3 className="font-semibold text-gray-800 text-sm">{plant.name}</h3>
+                <p className="text-xs text-gray-600 line-clamp-2">{plant.description}</p>
                 <div className="flex items-center justify-between">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(plant.difficulty)}`}>
-                    {plant.difficulty}
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(plant.careLevel)}`}>
+                    {plant.careLevel.charAt(0).toUpperCase() + plant.careLevel.slice(1)}
                   </span>
                   <button
-                    onClick={() => handleViewDetails(plant)}
+                    onClick={() => navigate(`/plants/${plant.slug}`)}
                     className="p-1.5 bg-green-100 rounded-full hover:bg-green-200 transition-colors"
                   >
                     <ArrowRight className="w-4 h-4 text-green-600" />

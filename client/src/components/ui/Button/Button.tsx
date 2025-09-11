@@ -21,24 +21,20 @@ export const Button: React.FC<ButtonProps> = ({
   type = 'button',
   ...props
 }) => {
-  const baseClasses = 'font-semibold rounded-lg focus:outline-none focus:ring-4 focus:ring-opacity-50 transition-colors';
+  const baseClasses = 'font-semibold rounded-full focus:outline-none focus:ring-4 focus:ring-opacity-50 transition-colors';
   
   const variantClasses = {
-    primary: 'bg-primary-200 text-white hover:bg-primary-300 focus:ring-primary-300',
-    secondary: 'bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-300',
-    outline: 'border-2 border-primary-600 text-primary-600 hover:bg-primary-50 focus:ring-primary-300',
-    ghost: 'text-primary-600 hover:bg-primary-50 focus:ring-primary-300',
+    primary: 'bg-brand text-white hover:bg-primary-900 focus:ring-primary-400',
+    secondary: 'bg-primary-300 text-brand hover:bg-primary-400 focus:ring-primary-400',
+    outline: 'border-2 border-brand text-brand hover:bg-primary-300 focus:ring-primary-400',
+    ghost: 'text-brand hover:bg-primary-300 focus:ring-primary-400',
   };
   
-  const sizeClasses = {
-    sm: 'px-3 py-1.5 text-sm',
-    md: 'px-4 py-2 text-base',
-    lg: 'px-6 py-3 text-lg',
-  };
+  // sizes are normalized to senior-friendly tokens below
   
   const seniorSizeClasses = {
-    sm: 'px-4 py-2 text-base min-h-[44px]', // Minimum touch target size
-    md: 'px-5 py-3 text-lg min-h-[50px]',
+    sm: 'px-5 py-3 text-base min-h-[48px]',
+    md: 'px-6 py-3.5 text-lg min-h-[52px]',
     lg: 'px-7 py-4 text-xl min-h-[56px]',
   };
   
