@@ -6,6 +6,7 @@ export interface InputProps extends BaseComponentProps, React.InputHTMLAttribute
   error?: string;
   helperText?: string;
   icon?: React.ReactNode;
+  endIcon?: React.ReactNode;
 }
 
 export const Input: React.FC<InputProps> = ({
@@ -13,6 +14,7 @@ export const Input: React.FC<InputProps> = ({
   error,
   helperText,
   icon,
+  endIcon,
   className = '',
   id,
   required,
@@ -21,26 +23,27 @@ export const Input: React.FC<InputProps> = ({
   const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
   
   return (
-    <div className="w-full">
+    <div className="w-full relative">
       <label 
         htmlFor={inputId} 
-        className="block text-lg font-medium mb-2"
+        className="block text-lg font-medium mb-2 font-heading text-[var(--color-text-strong)]"
       >
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
       </label>
       {icon && (
-        <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+        <div className="absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
           {icon}
         </div>
       )}
       <input
         id={inputId}
         className={`
-          w-full px-4 py-3 text-lg border-2 rounded-full 
-          focus:outline-none focus:ring-4 focus:ring-primary-200
-          transition-colors
-          ${error ? 'border-red-500' : 'border-gray-300'}
+          w-full ${icon ? 'pl-10' : 'px-5'} ${endIcon ? 'pr-12' : 'pr-5'} py-3 text-lg border-2 rounded-full 
+          bg-white text-[var(--color-text-strong)]
+          focus:outline-none focus:ring-4 focus:ring-primary-400
+          transition-colors placeholder:text-[var(--color-placeholder)]
+          ${error ? 'border-red-500' : 'border-[var(--color-border-gray)]'}
           ${className}
         `}
         aria-invalid={error ? 'true' : 'false'}
@@ -49,6 +52,11 @@ export const Input: React.FC<InputProps> = ({
         {...props}
        
       />
+      {endIcon && (
+        <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+          {endIcon}
+        </div>
+      )}
       {(helperText || error) && (
         <p 
           id={`${inputId}-description`} 

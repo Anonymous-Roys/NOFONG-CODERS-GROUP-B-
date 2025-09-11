@@ -1,163 +1,359 @@
 // src/pages/AddTaskPage/AddTaskPage.tsx
 import React, { useState } from 'react';
-import { ArrowLeft, Calendar, Clock, Droplets, Scissors, Zap } from 'lucide-react';
+import { ArrowLeft, Droplets, Scissors, Zap, Flower2, Clock, Calendar, Scissors as AlarmIcon } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
-import { Input } from '../../components/ui/Input';
 import { useNavigate } from 'react-router-dom';
+import TimePicker from '../../components/TimePicker';
+import DatePicker from '../../components/DatePicker';
+import TaskConfirmation from '../../components/TaskConfirmation';
 
 const AddTaskPage: React.FC = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    type: '',
-    plantName: '',
-    description: '',
-    dueDate: '',
-    priority: 'medium'
-  });
+  const [currentStep, setCurrentStep] = useState(1);
+  const [selectedTaskType, setSelectedTaskType] = useState<string>('');
+  const [selectedPlant, setSelectedPlant] = useState<string>('');
+  const [selectedTime, setSelectedTime] = useState('08:00');
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedFrequency, setSelectedFrequency] = useState('Daily');
+  const [alarmEnabled, setAlarmEnabled] = useState(true);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   const taskTypes = [
-    { id: 'water', label: 'Water', icon: Droplets, color: 'text-blue-600' },
-    { id: 'prune', label: 'Prune', icon: Scissors, color: 'text-green-600' },
-    { id: 'fertilize', label: 'Fertilize', icon: Zap, color: 'text-yellow-600' },
-    { id: 'repot', label: 'Repot', icon: Calendar, color: 'text-purple-600' }
+    { id: 'water', label: 'Water', icon: Droplets, color: 'text-blue-500' },
+    { id: 'fertilize', label: 'Fertilize', icon: Zap, color: 'text-green-500' },
+    { id: 'prune', label: 'Prune', icon: Scissors, color: 'text-red-500' },
+    { id: 'repot', label: 'Repot', icon: Flower2, color: 'text-green-500' }
   ];
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const plants = [
+    { id: 'tomato1', name: 'Tomato', imageUrl: 'https://images.unsplash.com/photo-1592841200221-21e1c0d36fb7?w=100&h=100&fit=crop&crop=center' },
+    { id: 'tomato2', name: 'Tomato', imageUrl: 'https://images.unsplash.com/photo-1592841200221-21e1c0d36fb7?w=100&h=100&fit=crop&crop=center' },
+    { id: 'tomato3', name: 'Tomato', imageUrl: 'https://images.unsplash.com/photo-1592841200221-21e1c0d36fb7?w=100&h=100&fit=crop&crop=center' },
+    { id: 'tomato4', name: 'Tomato', imageUrl: 'https://images.unsplash.com/photo-1592841200221-21e1c0d36fb7?w=100&h=100&fit=crop&crop=center' },
+    { id: 'tomato5', name: 'Tomato', imageUrl: 'https://images.unsplash.com/photo-1592841200221-21e1c0d36fb7?w=100&h=100&fit=crop&crop=center' },
+    { id: 'tomato6', name: 'Tomato', imageUrl: 'https://images.unsplash.com/photo-1592841200221-21e1c0d36fb7?w=100&h=100&fit=crop&crop=center' }
+  ];
+
+  const quickTimeOptions = [
+    { label: 'Morning (8 am)', time: '08:00' },
+    { label: 'Afternoon (2 pm)', time: '14:00' }
+  ];
+
+  const frequencyOptions = [
+    { id: 'Daily', label: 'Daily' },
+    { id: 'Weekly', label: 'Weekly' },
+    { id: 'Every 3 days', label: 'Every 3 days' },
+    { id: 'Custom', label: 'Custom' }
+  ];
+
+  const handleNext = () => {
+    if (currentStep === 1 && selectedTaskType && selectedPlant) {
+      setCurrentStep(2);
+    } else if (currentStep === 2) {
+      setCurrentStep(3);
+    } else if (currentStep === 3) {
+      setShowConfirmation(true);
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Adding task:', formData);
-    // Here you would typically save the task data
+  const handleBack = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    } else {
+      navigate(-1);
+    }
+  };
+
+  const handleSave = () => {
+    // Here you would save the task to your backend
+    console.log('Task saved:', {
+      taskType: selectedTaskType,
+      plant: selectedPlant,
+      time: selectedTime,
+      date: selectedDate,
+      frequency: selectedFrequency,
+      alarmEnabled
+    });
+    setShowConfirmation(true);
+  };
+
+  const handleConfirmationOk = () => {
     navigate('/');
   };
 
+  const handleConfirmationEdit = () => {
+    setShowConfirmation(false);
+    setCurrentStep(2);
+  };
+
+  const handleConfirmationDelete = () => {
+    navigate('/');
+  };
+
+  const isNextEnabled = () => {
+    if (currentStep === 1) return selectedTaskType && selectedPlant;
+    if (currentStep === 2) return true;
+    if (currentStep === 3) return true;
+    return false;
+  };
+
+  const getStepTitle = () => {
+    switch (currentStep) {
+      case 1: return 'Add New Task';
+      case 2: return 'When should I remind you?';
+      case 3: return 'Set Reminder';
+      default: return 'Add New Task';
+    }
+  };
+
+  const formatDate = (date: Date) => {
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    
+    const dayName = days[date.getDay()];
+    const day = date.getDate();
+    const month = months[date.getMonth()];
+    
+    return `${dayName}, ${day} ${month}`;
+  };
+
+  const getSelectedPlantData = () => {
+    return plants.find(p => p.id === selectedPlant);
+  };
+
+  const getSelectedTaskTypeData = () => {
+    return taskTypes.find(t => t.id === selectedTaskType);
+  };
+
+  // Show confirmation screen
+  if (showConfirmation) {
+    const plantData = getSelectedPlantData();
+    const taskTypeData = getSelectedTaskTypeData();
+    
+    if (!plantData || !taskTypeData) return null;
+
+    return (
+      <TaskConfirmation
+        task={{
+          type: taskTypeData.label,
+          plantName: plantData.name,
+          time: selectedTime,
+          frequency: selectedFrequency,
+          imageUrl: plantData.imageUrl
+        }}
+        onOk={handleConfirmationOk}
+        onEdit={handleConfirmationEdit}
+        onDelete={handleConfirmationDelete}
+      />
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white mb-16">
       {/* Header */}
       <div className="bg-white px-5 py-4 flex items-center gap-4 border-b border-gray-100">
         <button 
-          onClick={() => navigate(-1)}
+          onClick={handleBack}
           className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
         >
           <ArrowLeft className="w-6 h-6 text-gray-700" />
         </button>
-        <h1 className="text-xl font-semibold text-primary-800">Add New Task</h1>
+        <h1 className="text-xl font-semibold text-green-800">{getStepTitle()}</h1>
       </div>
 
       {/* Main Content */}
-      <div className="p-5">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Task Type */}
-          <div className="card">
-            <h3 className="font-medium text-gray-800 mb-4">Task Type</h3>
-            <div className="grid grid-cols-2 gap-3">
-              {taskTypes.map((type) => {
-                const Icon = type.icon;
-                return (
+      <div className="p-5 space-y-8 pb-32">
+        {/* Step 1: Task Type and Plant Selection */}
+        {currentStep === 1 && (
+          <>
+            {/* What do you want to do? Section */}
+            <div>
+              <h2 className="text-xl font-semibold text-green-800 mb-6">What do you want to do?</h2>
+              <div className="grid grid-cols-2 gap-4">
+                {taskTypes.map((type) => {
+                  const Icon = type.icon;
+                  return (
+                    <button
+                      key={type.id}
+                      onClick={() => setSelectedTaskType(type.id)}
+                      className={`p-6 rounded-xl border-2 transition-all duration-200 ${
+                        selectedTaskType === type.id
+                          ? 'border-green-500 bg-green-50 scale-105'
+                          : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                      }`}
+                    >
+                      <div className="flex flex-col items-center gap-3">
+                        <div className={`p-3 rounded-full ${
+                          selectedTaskType === type.id ? 'bg-white' : 'bg-gray-100'
+                        }`}>
+                          <Icon className={`w-8 h-8 ${type.color}`} />
+                        </div>
+                        <span className="text-lg font-medium text-gray-800">{type.label}</span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Which plant? Section */}
+            <div>
+              <h2 className="text-xl font-semibold text-green-800 mb-6">Which plant?</h2>
+              <div className="grid grid-cols-3 gap-4">
+                {plants.map((plant) => (
                   <button
-                    key={type.id}
-                    type="button"
-                    onClick={() => handleInputChange('type', type.id)}
-                    className={`p-4 rounded-lg border-2 transition-colors ${
-                      formData.type === type.id
-                        ? 'border-green-500 bg-green-50'
-                        : 'border-gray-200 hover:border-gray-300'
+                    key={plant.id}
+                    onClick={() => setSelectedPlant(plant.id)}
+                    className={`flex flex-col items-center gap-3 p-4 rounded-xl transition-all duration-200 ${
+                      selectedPlant === plant.id
+                        ? 'bg-green-50 scale-105'
+                        : 'hover:bg-gray-50'
                     }`}
                   >
-                    <div className="flex flex-col items-center gap-2">
-                      <Icon className={`w-6 h-6 ${type.color}`} />
-                      <span className="text-sm font-medium text-gray-800">{type.label}</span>
+                    <div className={`w-20 h-20 rounded-full overflow-hidden border-4 transition-all duration-200 ${
+                      selectedPlant === plant.id
+                        ? 'border-green-500'
+                        : 'border-gray-200'
+                    }`}>
+                      <img 
+                        src={plant.imageUrl} 
+                        alt={plant.name}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
+                    <span className="text-sm font-medium text-gray-800">{plant.name}</span>
                   </button>
-                );
-              })}
+                ))}
+              </div>
             </div>
-          </div>
+          </>
+        )}
 
-          {/* Task Details */}
-          <div className="card">
-            <h3 className="font-medium text-gray-800 mb-4">Task Details</h3>
+        {/* Step 2: Time Selection */}
+        {currentStep === 2 && (
+          <>
+            {/* Quick Time Options */}
             <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Plant Name *
-                </label>
-                <Input
-                  placeholder="e.g., My Peace Lily"
-                  value={formData.plantName}
-                  onChange={(e) => handleInputChange('plantName', e.target.value)}
-                  required
+              <div className="flex gap-3">
+                {quickTimeOptions.map((option) => (
+                  <button
+                    key={option.time}
+                    onClick={() => setSelectedTime(option.time)}
+                    className={`px-4 py-2 rounded-full border-2 transition-all duration-200 ${
+                      selectedTime === option.time
+                        ? 'bg-green-100 border-green-500 text-green-700'
+                        : 'border-green-200 text-green-700 hover:bg-green-50'
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Time Picker */}
+              <div className="flex justify-center">
+                <TimePicker
+                  selectedTime={selectedTime}
+                  onTimeChange={setSelectedTime}
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Description
-                </label>
-                <textarea
-                  placeholder="Add any specific instructions or notes..."
-                  value={formData.description}
-                  onChange={(e) => handleInputChange('description', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
-                  rows={3}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Due Date
-                </label>
-                <div className="relative">
-                  <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
-                    <Clock className="w-5 h-5 text-gray-400" />
-                  </div>
-                  <Input
-                    type="datetime-local"
-                    value={formData.dueDate}
-                    onChange={(e) => handleInputChange('dueDate', e.target.value)}
-                    className="pl-12"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Priority
-                </label>
-                <select
-                  value={formData.priority}
-                  onChange={(e) => handleInputChange('priority', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              {/* Date Selection */}
+              <div className="space-y-3">
+                <button
+                  onClick={() => setShowDatePicker(!showDatePicker)}
+                  className="flex items-center gap-3 p-3 rounded-full border border-green-200 text-green-700 hover:bg-green-50 transition-colors"
                 >
-                  <option value="low">Low</option>
-                  <option value="medium">Medium</option>
-                  <option value="high">High</option>
-                </select>
+                  <Calendar className="w-5 h-5" />
+                  <span>Today - {formatDate(selectedDate)}</span>
+                </button>
+
+                {showDatePicker && (
+                  <DatePicker
+                    selectedDate={selectedDate}
+                    onDateChange={setSelectedDate}
+                    className="mt-4"
+                  />
+                )}
               </div>
             </div>
-          </div>
+          </>
+        )}
 
-          {/* Action Buttons */}
-          <div className="flex gap-3">
-            <Button 
-              type="button"
-              variant="outline" 
-              className="flex-1"
-              onClick={() => navigate(-1)}
-            >
-              Cancel
-            </Button>
-            <Button 
-              type="submit"
-              variant="primary" 
-              className="flex-1"
-            >
-              Add Task
-            </Button>
-          </div>
-        </form>
+        {/* Step 3: Repeat Options and Alarm */}
+        {currentStep === 3 && (
+          <>
+            {/* Repeat Options */}
+            <div>
+              <h3 className="text-lg font-semibold text-green-800 mb-4">Repeat (optional)</h3>
+              <div className="space-y-3">
+                {frequencyOptions.map((option) => (
+                  <label key={option.id} className="flex items-center gap-3 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="frequency"
+                      value={option.id}
+                      checked={selectedFrequency === option.id}
+                      onChange={(e) => setSelectedFrequency(e.target.value)}
+                      className="w-5 h-5 text-green-600 focus:ring-green-500"
+                    />
+                    <span className="text-gray-700">{option.label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Alarm Toggle */}
+            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+              <div className="flex items-center gap-3">
+                <AlarmIcon className="w-5 h-5 text-gray-600" />
+                <span className="text-gray-700">Allow alarm</span>
+              </div>
+              <button
+                onClick={() => setAlarmEnabled(!alarmEnabled)}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                  alarmEnabled ? 'bg-green-600' : 'bg-gray-200'
+                }`}
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    alarmEnabled ? 'translate-x-6' : 'translate-x-1'
+                  }`}
+                />
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Bottom Section */}
+      <div className="fixed bottom-24 left-0 right-0 bg-white p-5 border-t border-gray-100">
+        {/* Action Button */}
+        <Button 
+          onClick={currentStep === 3 ? handleSave : handleNext}
+          disabled={!isNextEnabled()}
+          variant="primary" 
+          className={`w-full py-4 text-lg font-semibold transition-all duration-200 ${
+            isNextEnabled() 
+              ? 'bg-green-600 hover:bg-green-700' 
+              : 'bg-gray-300 cursor-not-allowed'
+          }`}
+        >
+          {currentStep === 3 ? 'Save' : 'Next'}
+        </Button>
+
+        {/* Pagination Dots */}
+        <div className="flex justify-center gap-2 mt-4">
+          {[1, 2, 3].map((step) => (
+            <div
+              key={step}
+              className={`w-3 h-3 rounded-full transition-colors ${
+                step === currentStep ? 'bg-green-600' : 'bg-gray-300'
+              }`}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -1,42 +1,53 @@
 /* src/styles/design-system.css */
 :root {
-    /* Color Palette */
-    --color-primary: #008f58;
-    --color-secondary: #2fd88d;
-    --color-light-green: #a4f6ca;
-    --color-accent-green: #00bf63;
-    
-    --color-black: #001000;
-    --color-white: #ffffff;
-    --color-light-gray: #f8f9fa;
+    /* Color Palette - per spec */
+    --color-black: #00100C;
+    --color-white: #F8FFF9;
+    /* Strokes & text weights encoded as semantic tokens */
+    --color-stroke-weak: #a4f6ca;  /* 300 */
+    --color-text-weak: #2fd88d;    /* 400 */
+    --color-stroke-strong: #008f58;/* 600 */
+    --color-brand: #008f58;        /* 700 brand */
+    --color-text-strong: #036240;  /* 900 */
+
+    /* Backwards-compatible aliases used across components */
+    --color-primary: var(--color-brand);
+    --color-secondary: var(--color-text-weak);
+    --color-light-green: var(--color-stroke-weak);
+    --color-accent-green: #2fd88d;
+
+    --color-light-gray: #eef7f0; /* subtle surface on white theme */
     --color-medium-gray: #6c757d;
-    --color-border-gray: #e9ecef;
-    
+    --color-border-gray: var(--color-stroke-weak);
+
     --color-success: #28a745;
     --color-warning: #ffc107;
     --color-error: #dc3545;
     --color-info: #17a2b8;
-    
-    --color-placeholder: #adb5bd;
-    --color-link: #008f58;
-  
+
+    --color-placeholder: #8aa49a;
+    --color-link: var(--color-brand);
+
     /* Typography */
-    --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    
-    --font-size-h1: 28px;
-    --font-size-h2: 24px;
+    --font-family-heading: 'Figtree', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --font-family-body: 'Kanit', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+    --font-size-h1: 26px;
+    --font-size-h2: 22px;
     --font-size-h3: 20px;
-    
+
     --font-size-body-large: 18px;
-    --font-size-body: 16px;
+    --font-size-body: 18px; /* body 18px per spec */
     --font-size-body-small: 14px;
     --font-size-caption: 12px;
-    
+
+    --font-weight-900: 900;
     --font-weight-bold: 700;
-    --font-weight-semibold: 600;
+    --font-weight-semibold: 600; /* Figtree SemiBold */
     --font-weight-medium: 500;
     --font-weight-regular: 400;
-  
+    --font-weight-light: 300; /* Kanit Light */
+
     /* Spacing */
     --spacing-xs: 4px;
     --spacing-sm: 8px;
@@ -44,23 +55,23 @@
     --spacing-lg: 24px;
     --spacing-xl: 32px;
     --spacing-xxl: 48px;
-  
+
     /* Border Radius */
     --border-radius-sm: 8px;
     --border-radius-md: 12px;
     --border-radius-lg: 16px;
     --border-radius-xl: 20px;
     --border-radius-full: 9999px;
-  
+
     /* Shadows */
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.15);
-  
+    --shadow-sm: 0 1px 3px rgba(0, 16, 12, 0.08);
+    --shadow-md: 0 2px 8px rgba(0, 16, 12, 0.1);
+    --shadow-lg: 0 4px 12px rgba(0, 16, 12, 0.15);
+
     /* Transitions */
     --transition-standard: all 0.2s ease-in-out;
     --transition-bounce: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  
+
     /* Component Sizes */
     --button-height: 48px;
     --input-height: 48px;
@@ -68,28 +79,28 @@
     --icon-size: 24px;
     --icon-size-sm: 20px;
     --icon-size-lg: 32px;
-  }
-  
-  /* Senior-friendly overrides */
-  .senior-mode {
+}
+
+/* Senior-friendly overrides */
+.senior-mode {
     --font-size-body-large: 20px;
     --font-size-body: 18px;
     --font-size-body-small: 16px;
     --button-height: 56px;
     --input-height: 56px;
-  }
-  
-  /* High contrast mode */
-  .high-contrast {
+}
+
+/* High contrast mode */
+.high-contrast {
     --color-primary: #006e44;
     --color-text-primary: #000000;
     --color-border-gray: #000000;
-  }
-  
-  /* Reduced motion */
-  @media (prefers-reduced-motion: reduce) {
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
     :root {
       --transition-standard: none;
       --transition-bounce: none;
     }
-  }
+}

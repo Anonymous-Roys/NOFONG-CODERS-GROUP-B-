@@ -7,23 +7,25 @@ export default {
   theme: {
     extend: {
       colors: {
+        black: '#00100C',
+        white: '#F8FFF9',
+        brand: '#008f58',
         primary: {
-          50: '#f0fdf4',
-          100: '#dcfce7',
-          200: '#bbf7d0',
-          300: '#86efac',
-          400: '#4ade80',
-          500: '#22c55e',
-          600: '#16a34a',
-          700: '#15803d',
-          800: '#166534',
-          900: '#14532d',
+          300: '#a4f6ca',
+          400: '#2fd88d',
+          600: '#008f58',
+          700: '#008f58',
+          900: '#036240',
         },
       },
+      fontFamily: {
+        heading: ['Figtree', 'system-ui', 'sans-serif'],
+        body: ['Kanit', 'system-ui', 'sans-serif'],
+      },
       fontSize: {
-        'xl': '1.5rem',     // 24px - better for seniors
-        '2xl': '1.75rem',   // 28px
-        '3xl': '2rem',      // 32px
+        'xl': '1.375rem', // 22px
+        '2xl': '1.625rem', // 26px
+        '3xl': '2rem',     // 32px
       },
       spacing: {
         '18': '4.5rem',     // Larger touch targets
