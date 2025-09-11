@@ -7,6 +7,7 @@ export interface BaseComponentProps {
   // Plant-related types
   export interface Plant {
     id: string;
+    slug: string;
     name: string;
     species: string;
     careLevel: 'easy' | 'medium' | 'difficult';
@@ -14,6 +15,31 @@ export interface BaseComponentProps {
     lastWatered: Date;
     nextWatering: Date;
     imageUrl?: string;
+    description: string;
+    plantType: string;
+    leafType: string;
+    fruitColor: string[];
+    lifeSpan: string;
+    plantingTime: string;
+    harvestTime: string;
+    care: {
+      water: {
+        drySeason: string;
+        rainySeason: string;
+      };
+      fertilize: string;
+      humidity: string;
+      pruning: string;
+      sunNeeds: string;
+      repotting: string;
+    };
+    diseases: {
+      name: string;
+      tag: string;
+      symptoms: string;
+      fix: string;
+      imageUrl?: string;
+    }[];
   }
   
   export interface CareTask {

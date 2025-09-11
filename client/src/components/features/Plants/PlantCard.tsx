@@ -1,18 +1,18 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../../ui/Button';
 import type { Plant } from '../../../types';
 
 export interface PlantCardProps {
   plant: Plant;
   onWater: (plantId: string) => void;
-  onViewDetails: (plantId: string) => void;
 }
 
 export const PlantCard: React.FC<PlantCardProps> = ({
   plant,
-  onWater,
-  onViewDetails
+  onWater
 }) => {
+  const navigate = useNavigate();
   const needsWatering = new Date() > plant.nextWatering;
   
   return (
@@ -67,7 +67,7 @@ export const PlantCard: React.FC<PlantCardProps> = ({
           <Button 
             variant="outline" 
             size="lg"
-            onClick={() => onViewDetails(plant.id)}
+            onClick={() => navigate(`/plants/${plant.slug}`)}
             className="flex-1"
           >
             Details
