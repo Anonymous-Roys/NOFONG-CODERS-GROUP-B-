@@ -1,51 +1,9 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const User = require('./models/user'); 
+const User = require('./models/user'); // your Mongoose user model
 
-// Login handler
-async function handleLogin(req, res) {
-  try {
-    const { username, password } = req.body;
-
-    // Find user in MongoDB
-    const user = await User.findOne({ username });
-    if (!user) {
-      return res.status(401).json({ message: 'Invalid credentials' });
-    }
-
-    // Verify password
-    const validPassword = await bcrypt.compare(password, user.password);
-    if (!validPassword) {
-      return res.status(401).json({ message: 'Invalid credentials' });
-    }
-
-    // Generate JWT token
-    const token = jwt.sign(
-      {
-        userId: user._id,
-        username: user.username,
-        dateOfBirth: user.dateOfBirth,
-        location: user.location,
-        gender: user.gender
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
-
-    // Set token in cookie
-    res.cookie('auth_token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production'
-    });
-
-    res.json({ message: 'Login successful' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-}
-
-// Register handler
+// REGISTER
 async function handleRegister(req, res) {
   try {
     const { username, password, dateOfBirth, location, gender } = req.body;
@@ -70,16 +28,60 @@ async function handleRegister(req, res) {
     });
 
     await newUser.save();
-
     res.status(201).json({ message: 'User created successfully' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 }
 
-// Authentication middleware
+// LOGIN
+async function handleLogin(req, res) {
+  try {
+    const { username, password } = req.body;
+
+    // Find user
+    const user = await User.findOne({ username });
+    if (!user) return res.status(401).json({ message: 'Invalid credentials' });
+
+    // Verify password
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword) return res.status(401).json({ message: 'Invalid credentials' });
+
+    // Generate JWT
+    const token = jwt.sign(
+      {
+        userId: user._id,
+        username: user.username,
+        dateOfBirth: user.dateOfBirth,
+        location: user.location,
+        gender: user.gender
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    // Set cookie
+    res.cookie('auth_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production'
+    });
+
+    // ✅ Also return token for Postman / client testing
+    res.json({
+      message: 'Login successful',
+      token
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+// AUTH MIDDLEWARE
 function authenticateToken(req, res, next) {
-  const token = req.cookies.auth_token;
+  // Support both cookie & Postman Bearer Token
+  const token =
+    req.cookies.auth_token ||
+    (req.headers['authorization'] && req.headers['authorization'].split(' ')[1]);
 
   if (!token) {
     return res.status(401).json({ message: 'Authentication required' });
@@ -87,22 +89,22 @@ function authenticateToken(req, res, next) {
 
   try {
     const verified = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = verified;
+    req.user = verified; 
     next();
   } catch (err) {
     res.status(401).json({ message: 'Invalid token' });
   }
 }
 
-// Logout handler
+// LOGOUT
 function handleLogout(req, res) {
   res.clearCookie('auth_token');
   res.json({ message: 'Logged out successfully' });
 }
 
 module.exports = {
-  handleLogin,
   handleRegister,
+  handleLogin,
   authenticateToken,
   handleLogout
 };

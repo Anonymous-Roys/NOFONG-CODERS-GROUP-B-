@@ -1,52 +1,37 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Plant = require('../models/plant');
-const { authenticateToken } = require('../auth');
+const Plant = require("../models/plant");
+const { authenticateToken } = require("../auth");
 
-// Get plant list (with filters & search)
-router.get('/', async (req, res) => {
+// 🌱 Add new plant (protected)
+router.post("/", authenticateToken, async (req, res) => {
   try {
-    const { type, search } = req.query;
-    let query = {};
+    const { name, species, location, purchaseDate, notes } = req.body;
 
-    if (type && type !== "All") {
-      query.type = new RegExp(`^${type}$`, 'i'); // case-insensitive match
-    }
+    // 👇 Use userId from JWT payload (set in auth.js)
+    const newPlant = new Plant({
+      name,
+      species,
+      location,
+      purchaseDate,
+      notes,
+      userId: req.user.userId 
+    });
 
-    if (search) {
-      query.name = { $regex: search, $options: 'i' }; // case-insensitive search
-    }
+    await newPlant.save();
+    res.status(201).json(newPlant);
+  } catch (err) {
+    res.status(500).json({ message: "Error saving plant", error: err.message });
+  }
+});
 
-    const plants = await Plant.find(query);
+// 🌱 Get all plants for logged-in user
+router.get("/", authenticateToken, async (req, res) => {
+  try {
+    const plants = await Plant.find({ userId: req.user.userId });
     res.json(plants);
   } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Get plant details
-router.get('/:id', async (req, res) => {
-  try {
-    const plant = await Plant.findById(req.params.id);
-    if (!plant) return res.status(404).json({ message: "Plant not found" });
-    res.json(plant);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Toggle favorite
-router.put('/:id/favorite', authenticateToken, async (req, res) => {
-  try {
-    const plant = await Plant.findById(req.params.id);
-    if (!plant) return res.status(404).json({ message: "Plant not found" });
-
-    plant.isFavorite = !plant.isFavorite;
-    await plant.save();
-
-    res.json(plant);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ message: "Error fetching plants", error: err.message });
   }
 });
 
