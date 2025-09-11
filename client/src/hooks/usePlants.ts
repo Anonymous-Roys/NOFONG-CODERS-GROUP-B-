@@ -6,11 +6,12 @@ import type { Plant } from '../types';
 const mockPlants: Plant[] = [
   {
     id: '1',
+
     slug: 'snake-plant',
     name: 'Snake Plant',
     species: 'Sansevieria trifasciata',
     careLevel: 'easy',
-    waterFrequency: 14,
+    waterFrequency: 3,
     lastWatered: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 7 days ago
     nextWatering: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
     description: 'Snake plants are one of the most popular and low-maintenance houseplants. They\'re perfect for beginners and can thrive in low light conditions with minimal care.',
@@ -48,6 +49,7 @@ const mockPlants: Plant[] = [
   },
   {
     id: '2',
+
     slug: 'tomato-de-tropic',
     name: 'Tomato de tropic',
     species: 'Solanum lycopersicum',
@@ -99,6 +101,42 @@ const mockPlants: Plant[] = [
         fix: 'Prune lower leaves, water at the base'
       }
     ]
+  },
+  {
+    id: '3',
+    name: 'Tomato',
+    species: 'Solanum lycopersicum',
+    careLevel: 'medium',
+    waterFrequency: 2,
+    lastWatered: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+    nextWatering: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+  },
+  {
+    id: '4',
+    name: 'Tomato',
+    species: 'Solanum lycopersicum',
+    careLevel: 'medium',
+    waterFrequency: 2,
+    lastWatered: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+    nextWatering: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+  },
+  {
+    id: '5',
+    name: 'Tomato',
+    species: 'Solanum lycopersicum',
+    careLevel: 'medium',
+    waterFrequency: 2,
+    lastWatered: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+    nextWatering: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+  },
+  {
+    id: '6',
+    name: 'Tomato',
+    species: 'Solanum lycopersicum',
+    careLevel: 'medium',
+    waterFrequency: 2,
+    lastWatered: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
+    nextWatering: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
   },
 ];
 
