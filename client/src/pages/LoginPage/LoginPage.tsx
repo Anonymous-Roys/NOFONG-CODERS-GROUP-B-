@@ -6,17 +6,29 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const LoginPage: React.FC = () => {
-  const { sendOtp } = useAuth();
+  const { sendOtp, error, loading, clearError } = useAuth();
   const [phone, setPhone] = React.useState('');
+  const [localError, setLocalError] = React.useState('');
   const navigate = useNavigate();
 
   const onSend = async () => {
-    await sendOtp(phone, 'login');
+    setLocalError('');
+    clearError();
     
-    navigate('/otp', { state: { phone, purpose: 'login' } });
+    if (!phone.trim()) {
+      setLocalError('Please enter your phone number');
+      return;
+    }
+    
+    const result = await sendOtp(phone, 'login');
+    if (result.success) {
+      navigate('/otp', { state: { phone, purpose: 'login' } });
+    }
   };
 
-  // const [error, setError] = React.useState('');
+  React.useEffect(() => {
+    clearError();
+  }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4" style={{backgroundColor: 'var(--color-white)'}}>
@@ -33,13 +45,28 @@ const LoginPage: React.FC = () => {
               type="tel"
               placeholder="+233 563 928 928"
               value={phone}
-              onChange={(e)=>setPhone(e.target.value)}
+              onChange={(e) => {
+                setPhone(e.target.value);
+                setLocalError('');
+                clearError();
+              }}
               aria-label="Phone number"
             />
+            {(error || localError) && (
+              <p className="mt-2 text-sm" style={{color:'#dc2626'}}>
+                {localError || error}
+              </p>
+            )}
           </div>
 
-          {/* error state intentionally hidden in OTP-only flow */}
-          <Button className="w-full mb-6" type="button" onClick={onSend}>Send OTP</Button>
+          <Button 
+            className="w-full mb-6" 
+            type="button" 
+            onClick={onSend}
+            disabled={loading}
+          >
+            {loading ? 'Sending...' : 'Send OTP'}
+          </Button>
 
           <div className="flex items-center gap-4 mb-6">
             <hr className="flex-1 border-t" style={{borderColor:'var(--color-border-gray)'}} />
@@ -58,7 +85,22 @@ const LoginPage: React.FC = () => {
             </Button>
           </div>
           <p className="text-center mt-8 text-sm">
-            New to this app? <button onClick={async()=>{ const target = phone || prompt('Enter phone number') || ''; await sendOtp(target, 'register'); navigate('/otp', { state: { phone: target, purpose: 'register' } }); }} className="underline" style={{color:'var(--color-brand)'}}>Register</button>
+            New to this app? <button 
+              onClick={async()=>{ 
+                const target = phone || prompt('Enter phone number') || ''; 
+                if (target) {
+                  const result = await sendOtp(target, 'register'); 
+                  if (result.success) {
+                    navigate('/otp', { state: { phone: target, purpose: 'register' } });
+                  }
+                }
+              }} 
+              className="underline" 
+              style={{color:'var(--color-brand)'}}
+              disabled={loading}
+            >
+              Register
+            </button>
           </p>
         </div>
       </div>
