@@ -1,4 +1,4 @@
-export const API_BASE = 'https://nofong-coders-group-b.vercel.app';
+export const API_BASE = 'https://nofong-coders-group-b.onrender.com';
 
 export async function apiFetch(path: string, options: RequestInit = {}) {
   const res = await fetch(`${API_BASE}${path}`, {
