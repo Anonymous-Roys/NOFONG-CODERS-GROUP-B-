@@ -6,7 +6,6 @@ import type { Plant } from '../types';
 const mockPlants: Plant[] = [
   {
     id: '1',
-
     slug: 'snake-plant',
     name: 'Snake Plant',
     species: 'Sansevieria trifasciata',
@@ -49,11 +48,11 @@ const mockPlants: Plant[] = [
   },
   {
     id: '2',
-
     slug: 'tomato-de-tropic',
     name: 'Tomato de tropic',
     species: 'Solanum lycopersicum',
     careLevel: 'medium',
+    imageUrl: 'imagetomato.jpg',
     waterFrequency: 3,
     lastWatered: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
     nextWatering: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 days from now
@@ -104,7 +103,6 @@ const mockPlants: Plant[] = [
 
   },
 
-  },
 ];
 
 export const usePlants = () => {

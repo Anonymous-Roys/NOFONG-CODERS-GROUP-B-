@@ -1,5 +1,4 @@
 // src/components/layout/BottomNavigation.tsx
-
 import React, { useState } from 'react';
 import { Home, Book, PenTool, User, Sprout } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -10,7 +9,6 @@ const BottomNavigation: React.FC = () => {
   const navigate = useNavigate();
 
   const navigationItems = [
-
     { path: '/garden', icon: Sprout, label: 'My Garden' },
     { path: '/plants', icon: Book, label: 'Plant library' },
     { path: '/', icon: Home, label: 'Home' },
@@ -58,7 +56,6 @@ const BottomNavigation: React.FC = () => {
 
   return (
     <>
-
       <div className="fixed bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/5 to-transparent pointer-events-none" />
       <nav className="fixed bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-100/50 px-2 py-1">
       <div className="flex items-end justify-around relative pb-2">

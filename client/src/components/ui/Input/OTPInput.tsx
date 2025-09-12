@@ -35,7 +35,7 @@ export const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) =>
           inputMode="numeric"
           maxLength={1}
           aria-label={`OTP digit ${i + 1}`}
-          className="w-14 h-14 text-center text-xl rounded-lg border-2 focus:outline-none focus:ring-4 focus:ring-primary-400"
+          className="w-12 h-12 text-center text-xl rounded-lg border-2 focus:outline-none focus:ring-4 focus:ring-primary-400"
           ref={el => (inputs.current[i] = el)}
           onChange={(e) => handleChange(i, e)}
           onKeyDown={(e) => handleKeyDown(i, e)}

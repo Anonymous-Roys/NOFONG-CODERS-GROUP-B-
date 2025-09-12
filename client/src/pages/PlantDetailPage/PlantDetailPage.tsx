@@ -247,8 +247,14 @@ const PlantDetailPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Explore More */}
-              <div>
+            
+            </div>
+          )}
+
+          {activeTab === 'explore' && (
+            <div className="space-y-6">
+               {/* Explore More */}
+               <div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-4">Explore More</h3>
                 <div className="bg-gray-100 rounded-lg p-4">
                   <div className="relative">
@@ -295,18 +301,6 @@ const PlantDetailPage: React.FC = () => {
                     </div>
                   ))}
                 </div>
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'explore' && (
-            <div className="space-y-6">
-              <div className="text-center py-8">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl">🔍</span>
-                </div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">Explore More</h3>
-                <p className="text-gray-600">Discover more about {plant.name} and related plants</p>
               </div>
             </div>
           )}

@@ -1,6 +1,6 @@
 // src/App.tsx
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AppLayout from './components/layout/AppLayout';
 import GardenPage from './pages/GardenPage/GardenPage';
 import PlantsPage from './pages/PlantsPage/PlantsPage';
@@ -13,24 +13,46 @@ import HomePage from './pages/Homepage/Homepage';
 import PlantDetailPage from './pages/PlantDetailPage/PlantDetailPage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import SplashScreen from './components/SplashScreen';
+import Onboarding from './pages/Onboarding/Onboarding';
 import './styles/design-system.css'
 import './styles/base.css';
 import './styles/components.css';
 import { AuthProvider } from './context/AuthContext';
 import SignupPage from './pages/SignupPage/SignupPage';
 import ProfileCreatePage from './pages/ProfileCreatePage/ProfileCreatePage';
+import OtpPage from './pages/OtpPage/OtpPage';
+import { RequireAuth, PublicOnly } from './routes/guards';
 
 
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
+  const [shouldOnboard, setShouldOnboard] = useState<boolean | null>(null);
 
   const handleSplashComplete = () => {
     setShowSplash(false);
   };
 
+  useEffect(() => {
+    const onboarded = localStorage.getItem('onboarded') === 'true';
+    setShouldOnboard(!onboarded);
+  }, []);
+
   if (showSplash) {
     return <SplashScreen onComplete={handleSplashComplete} />;
+  }
+
+  if (shouldOnboard) {
+    return (
+      <AuthProvider>
+        <Router>
+          <Routes>
+            <Route path="/onboarding" element={<Onboarding />} />
+            <Route path="*" element={<Onboarding />} />
+          </Routes>
+        </Router>
+      </AuthProvider>
+    );
   }
 
   return (
@@ -38,9 +60,14 @@ function App() {
     <Router>
       <Routes>
         {/* <Route path="" element={<DesignSystemShowcase/>} /> */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/profile/create" element={<ProfileCreatePage />} />
+        <Route element={<PublicOnly /> }>
+          <Route path="/onboarding" element={<Onboarding />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/otp" element={<OtpPage />} />
+          <Route path="/profile/create" element={<ProfileCreatePage />} />
+        </Route>
+        <Route element={<RequireAuth /> }>
         <Route path="/" element={<AppLayout />}>
           <Route index element={<HomePage />} />
           <Route path="garden" element={<GardenPage />} />
@@ -51,6 +78,7 @@ function App() {
           <Route path="plants/add" element={<AddPlantPage />} />
           <Route path="tasks/add" element={<AddTaskPage />} />
           <Route path="tasks" element={<TaskManager />} />
+        </Route>
         </Route>
       </Routes>
     </Router>

@@ -2,18 +2,34 @@ import React, { useState } from 'react';
 import { Button } from '../../components/ui/Button/Button';
 import OTPInput from '../../components/ui/Input/OTPInput';
 import { useAuth } from '../../context/AuthContext';
+import { Input } from '../../components/ui/Input/Input';
 import { useNavigate } from 'react-router-dom';
 
 const SignupPage: React.FC = () => {
-  const { verifyOtp } = useAuth();
+  const { verifyOtp, sendOtp } = useAuth();
   const [error, setError] = useState<string>('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [dob, setDob] = useState('');
+  const [location, setLocation] = useState('');
+  const [gender, setGender] = useState<'Male'|'Female'|'Other'|''>('');
   const navigate = useNavigate();
 
   const handleComplete = async (code: string) => {
-    const ok = await verifyOtp(code);
-    if (!ok) setError('Invalid code. Try 123456');
-    else navigate('/profile/create');
+    const result = await verifyOtp(code);
+    if (result === 'invalid') {
+      setError('Invalid code. Try the code you received.');
+    } else if (result === 'profile_pending') {
+      navigate('/profile/create');
+    } else {
+      navigate('/');
+    }
   };
+
+  React.useEffect(() => {
+    // If we landed here from Login Register link, OTP is already sent with purpose=register
+    // If user typed /signup directly, do nothing until they enter OTP code delivered earlier
+  }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4" style={{backgroundColor: 'var(--color-white)'}}>
@@ -29,7 +45,23 @@ const SignupPage: React.FC = () => {
         <OTPInput length={6} onComplete={handleComplete} />
         {error && <p className="mt-2 text-sm" style={{color:'#dc2626'}}>{error}</p>}
 
-        <Button className="w-full mt-8">Sign Up</Button>
+        <div className="grid grid-cols-1 gap-3 mt-6">
+          <Input label="Username" placeholder="Choose a username" value={username} onChange={(e)=>setUsername(e.target.value)} />
+          <Input label="Password" type="password" placeholder="Choose a password" value={password} onChange={(e)=>setPassword(e.target.value)} />
+          <Input label="Date of Birth" type="date" value={dob} onChange={(e)=>setDob(e.target.value)} />
+          <Input label="Location" placeholder="City, Country" value={location} onChange={(e)=>setLocation(e.target.value)} />
+          <div>
+            <label className="block mb-2 text-sm" style={{color:'var(--color-text-strong)'}}>Gender</label>
+            <select className="w-full border-2 rounded-full px-5 py-3 text-lg" value={gender} onChange={(e)=>setGender(e.target.value as any)}>
+              <option value="">Select gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <Button className="w-full mt-4" onClick={()=>navigate('/profile/create')}>Continue</Button>
 
         <div className="flex items-center gap-4 my-6">
           <hr className="flex-1 border-t" style={{borderColor:'var(--color-border-gray)'}} />

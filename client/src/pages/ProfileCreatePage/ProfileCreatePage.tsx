@@ -57,9 +57,6 @@ const ProfileCreatePage: React.FC = () => {
           <Button type="submit" className="w-full">Complete</Button>
         </form>
 
-        <p className="text-center mt-4" style={{color:'var(--color-brand)'}}>
-          Skip for now
-        </p>
       </div>
     </div>
   );

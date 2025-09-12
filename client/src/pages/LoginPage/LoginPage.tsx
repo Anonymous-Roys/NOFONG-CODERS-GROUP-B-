@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from '../../components/ui/Button/Button';
 import { Input } from '../../components/ui/Input/Input';
 import { useAuth } from '../../context/AuthContext';
+// import { apiFetch } from '../../utils/api';
 import { useNavigate } from 'react-router-dom';
 
 const LoginPage: React.FC = () => {
@@ -10,9 +11,12 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
 
   const onSend = async () => {
-    await sendOtp(phone);
-    navigate('/signup');
+    await sendOtp(phone, 'login');
+    
+    navigate('/otp', { state: { phone, purpose: 'login' } });
   };
+
+  // const [error, setError] = React.useState('');
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4" style={{backgroundColor: 'var(--color-white)'}}>
@@ -34,6 +38,7 @@ const LoginPage: React.FC = () => {
             />
           </div>
 
+          {/* error state intentionally hidden in OTP-only flow */}
           <Button className="w-full mb-6" type="button" onClick={onSend}>Send OTP</Button>
 
           <div className="flex items-center gap-4 mb-6">
@@ -52,9 +57,8 @@ const LoginPage: React.FC = () => {
               Continue with Apple
             </Button>
           </div>
-
           <p className="text-center mt-8 text-sm">
-            New to this app? <a href="#" className="underline" style={{color:'var(--color-brand)'}}>Register</a>
+            New to this app? <button onClick={async()=>{ const target = phone || prompt('Enter phone number') || ''; await sendOtp(target, 'register'); navigate('/otp', { state: { phone: target, purpose: 'register' } }); }} className="underline" style={{color:'var(--color-brand)'}}>Register</button>
           </p>
         </div>
       </div>

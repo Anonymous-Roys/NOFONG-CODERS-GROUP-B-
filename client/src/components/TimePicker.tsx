@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { Clock } from 'lucide-react';
+import React from 'react';
 
 interface TimePickerProps {
   selectedTime: string;

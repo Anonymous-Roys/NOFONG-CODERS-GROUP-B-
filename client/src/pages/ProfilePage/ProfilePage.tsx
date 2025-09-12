@@ -2,9 +2,11 @@
 import React from 'react';
 import { User, Leaf, Bell, FileText, HelpCircle, Settings, ChevronRight, CheckSquare } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 const ProfilePage: React.FC = () => {
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
   
   const menuItems = [
     { icon: User, label: 'My Account', path: '/profile/account' },
@@ -49,8 +51,10 @@ const ProfilePage: React.FC = () => {
           </div>
           
           {/* User Info */}
-          <h2 className="text-2xl font-bold text-gray-800 mb-1">Miriam Epraim</h2>
-          <p className="text-gray-600">mimiepraim@gmail.com</p>
+          <h2 className="text-2xl font-bold text-gray-800 mb-1">{user?.name || 'Guest'}</h2>
+          {user?.email && <p className="text-gray-600">{user.email}</p>}
+          {!user?.email && <p className="text-gray-600">{user?.id ? 'Logged in' : 'Not logged in'}</p>}
+          <button onClick={()=>{ logout(); navigate('/login'); }} className="mt-4 px-5 py-2 rounded-full border text-red-600 border-red-300 hover:bg-red-50">Log out</button>
         </div>
 
         {/* Menu Items */}

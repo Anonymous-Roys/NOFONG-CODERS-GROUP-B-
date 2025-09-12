@@ -1,6 +1,6 @@
 // src/pages/AddTaskPage/AddTaskPage.tsx
 import React, { useState } from 'react';
-import { ArrowLeft, Droplets, Scissors, Zap, Flower2, Clock, Calendar, Scissors as AlarmIcon } from 'lucide-react';
+import { ArrowLeft, Droplets, Scissors, Zap, Flower2, Calendar, Scissors as AlarmIcon } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { useNavigate } from 'react-router-dom';
 import TimePicker from '../../components/TimePicker';

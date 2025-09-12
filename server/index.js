@@ -4,12 +4,7 @@ const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
-const {
-  handleLogin,
-  handleRegister,
-  authenticateToken,
-  handleLogout,
-} = require("./auth");
+const { handleLogin, handleRegister, authenticateToken, handleLogout, sendOtp, verifyOtp } = require("./auth");
 
 // Import routes
 const homeRoutes = require("./routes/home");
@@ -41,6 +36,8 @@ mongoose
 app.post("/register", handleRegister);
 app.post("/login", handleLogin);
 app.post("/logout", handleLogout);
+app.post("/otp/send", sendOtp); // { phone, purpose: 'login'|'register' }
+app.post("/otp/verify", verifyOtp); // { phone, code, purpose }
 
 app.get("/protected", authenticateToken, (req, res) => {
   res.json({
