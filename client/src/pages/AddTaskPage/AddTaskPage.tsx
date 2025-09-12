@@ -27,12 +27,12 @@ const AddTaskPage: React.FC = () => {
   ];
 
   const plants = [
-    { id: 'tomato1', name: 'Tomato', imageUrl: 'https://images.unsplash.com/photo-1592841200221-21e1c0d36fb7?w=100&h=100&fit=crop&crop=center' },
-    { id: 'tomato2', name: 'Tomato', imageUrl: 'https://images.unsplash.com/photo-1592841200221-21e1c0d36fb7?w=100&h=100&fit=crop&crop=center' },
-    { id: 'tomato3', name: 'Tomato', imageUrl: 'https://images.unsplash.com/photo-1592841200221-21e1c0d36fb7?w=100&h=100&fit=crop&crop=center' },
-    { id: 'tomato4', name: 'Tomato', imageUrl: 'https://images.unsplash.com/photo-1592841200221-21e1c0d36fb7?w=100&h=100&fit=crop&crop=center' },
-    { id: 'tomato5', name: 'Tomato', imageUrl: 'https://images.unsplash.com/photo-1592841200221-21e1c0d36fb7?w=100&h=100&fit=crop&crop=center' },
-    { id: 'tomato6', name: 'Tomato', imageUrl: 'https://images.unsplash.com/photo-1592841200221-21e1c0d36fb7?w=100&h=100&fit=crop&crop=center' }
+    { id: 'tomato1', name: 'Tomato', imageUrl: '/imagetomato.jpg' },
+    { id: 'tomato2', name: 'Tomato', imageUrl: '/imagetomato.jpg'},
+    { id: 'tomato3', name: 'Tomato', imageUrl: '/imagetomato.jpg'},
+    { id: 'tomato4', name: 'Tomato', imageUrl: '/imagetomato.jpg' },
+    { id: 'tomato5', name: 'Tomato', imageUrl: '/imagetomato.jpg' },
+    { id: 'tomato6', name: 'Tomato', imageUrl: '/imagetomato.jpg' }
   ];
 
   const quickTimeOptions = [
@@ -150,12 +150,12 @@ const AddTaskPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white mb-16">
+    <div className="min-h-screen mb-16 bg-white">
       {/* Header */}
-      <div className="bg-white px-5 py-4 flex items-center gap-4 border-b border-gray-100">
+      <div className="flex items-center gap-4 px-5 py-4 bg-white border-b border-gray-100">
         <button 
           onClick={handleBack}
-          className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+          className="p-2 transition-colors rounded-lg hover:bg-gray-100"
         >
           <ArrowLeft className="w-6 h-6 text-gray-700" />
         </button>
@@ -163,13 +163,13 @@ const AddTaskPage: React.FC = () => {
       </div>
 
       {/* Main Content */}
-      <div className="p-5 space-y-8 pb-32">
+      <div className="p-5 pb-32 space-y-8">
         {/* Step 1: Task Type and Plant Selection */}
         {currentStep === 1 && (
           <>
             {/* What do you want to do? Section */}
             <div>
-              <h2 className="text-xl font-semibold text-green-800 mb-6">What do you want to do?</h2>
+              <h2 className="mb-6 text-xl font-semibold text-green-800">What do you want to do?</h2>
               <div className="grid grid-cols-2 gap-4">
                 {taskTypes.map((type) => {
                   const Icon = type.icon;
@@ -199,7 +199,7 @@ const AddTaskPage: React.FC = () => {
 
             {/* Which plant? Section */}
             <div>
-              <h2 className="text-xl font-semibold text-green-800 mb-6">Which plant?</h2>
+              <h2 className="mb-6 text-xl font-semibold text-green-800">Which plant?</h2>
               <div className="grid grid-cols-3 gap-4">
                 {plants.map((plant) => (
                   <button
@@ -219,7 +219,7 @@ const AddTaskPage: React.FC = () => {
                       <img 
                         src={plant.imageUrl} 
                         alt={plant.name}
-                        className="w-full h-full object-cover"
+                        className="object-cover w-full h-full"
                       />
                     </div>
                     <span className="text-sm font-medium text-gray-800">{plant.name}</span>
@@ -263,7 +263,7 @@ const AddTaskPage: React.FC = () => {
               <div className="space-y-3">
                 <button
                   onClick={() => setShowDatePicker(!showDatePicker)}
-                  className="flex items-center gap-3 p-3 rounded-full border border-green-200 text-green-700 hover:bg-green-50 transition-colors"
+                  className="flex items-center gap-3 p-3 text-green-700 transition-colors border border-green-200 rounded-full hover:bg-green-50"
                 >
                   <Calendar className="w-5 h-5" />
                   <span>Today - {formatDate(selectedDate)}</span>
@@ -286,7 +286,7 @@ const AddTaskPage: React.FC = () => {
           <>
             {/* Repeat Options */}
             <div>
-              <h3 className="text-lg font-semibold text-green-800 mb-4">Repeat (optional)</h3>
+              <h3 className="mb-4 text-lg font-semibold text-green-800">Repeat (optional)</h3>
               <div className="space-y-3">
                 {frequencyOptions.map((option) => (
                   <label key={option.id} className="flex items-center gap-3 cursor-pointer">
@@ -305,7 +305,7 @@ const AddTaskPage: React.FC = () => {
             </div>
 
             {/* Alarm Toggle */}
-            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+            <div className="flex items-center justify-between p-4 rounded-lg bg-gray-50">
               <div className="flex items-center gap-3">
                 <AlarmIcon className="w-5 h-5 text-gray-600" />
                 <span className="text-gray-700">Allow alarm</span>
@@ -328,7 +328,7 @@ const AddTaskPage: React.FC = () => {
       </div>
 
       {/* Bottom Section */}
-      <div className="fixed bottom-24 left-0 right-0 bg-white p-5 border-t border-gray-100">
+      <div className="fixed left-0 right-0 p-5 bg-white border-t border-gray-100 bottom-24">
         {/* Action Button */}
         <Button 
           onClick={currentStep === 3 ? handleSave : handleNext}
