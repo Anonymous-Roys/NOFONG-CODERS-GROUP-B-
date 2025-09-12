@@ -16,7 +16,8 @@ import {
   ClipboardCheck,
   X,
   Settings,
-  HelpCircle
+  HelpCircle,
+  CheckSquare
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
@@ -44,6 +45,7 @@ const HomePage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [isActionSheetOpen, setIsActionSheetOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [selectedPlant, setSelectedPlant] = useState<PopularPlant | null>(null);
   const [tasks, setTasks] = useState<Task[]>([
@@ -143,6 +145,7 @@ const HomePage: React.FC = () => {
     setSelectedPlant(plant);
   };
 
+
   const filteredTasks = tasks.filter(task =>
     task.plantName.toLowerCase().includes(searchQuery.toLowerCase()) ||
     task.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -154,8 +157,24 @@ const HomePage: React.FC = () => {
     plant.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen bg-gray-50 pb-20 animate-fadeIn">
+      {/* Brand logo at very top */}
+      <div className="pt-4 pb-2 flex items-center justify-center">
+        <div className="w-14 h-14 rounded-full bg-green-100 shadow-md flex items-center justify-center">
+          {/* Simple brand mark: leaf inside circle */}
+          <svg
+            viewBox="0 0 24 24"
+            className="w-8 h-8 text-green-600"
+            fill="currentColor"
+            aria-hidden
+          >
+            <path d="M5 21c7 0 14-6 14-13V4a1 1 0 0 0-1-1h-4C7 3 3 8 3 14v6a1 1 0 0 0 1 1h1z" opacity=".2" />
+            <path d="M19 3h-4C7 3 3 8 3 14v6h2c7 0 14-6 14-13V4a1 1 0 0 0-1-1zm-1 3c0 6-5.477 11-12 11v-3c0-4.477 3.582-8 8-8h4v0z" />
+          </svg>
+        </div>
+      </div>
       {/* Header */}
       <div className="bg-white px-5 py-4 flex items-center justify-between border-b border-gray-100 relative">
         <button 
@@ -192,6 +211,13 @@ const HomePage: React.FC = () => {
               >
                 <Sprout className="w-5 h-5 text-green-600" />
                 <span className="text-gray-800">My Garden</span>
+              </button>
+              <button 
+                onClick={() => { navigate('/tasks'); setIsMenuOpen(false); }}
+                className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 text-left"
+              >
+                <CheckSquare className="w-5 h-5 text-green-600" />
+                <span className="text-gray-800">Tasks</span>
               </button>
               <button 
                 onClick={() => { navigate('/plants'); setIsMenuOpen(false); }}
@@ -282,27 +308,7 @@ const HomePage: React.FC = () => {
           />
         </div>
 
-        {/* Quick Actions */}
-        <div className="grid grid-cols-2 gap-4 mb-8">
-          <Button 
-            variant="primary" 
-            size="sm"
-            onClick={handleAddNewPlant}
-            className="flex items-center justify-center gap-2 text-black"
-          >
-            <Sprout className="w-5 h-5" />
-            Add a plant
-          </Button>
-          <Button 
-            variant="primary" 
-            size="sm"
-            onClick={handleAddNewTask}
-            className="flex items-center justify-center gap-2 text-black"
-          >
-            <ClipboardCheck className="w-5 h-5" />
-            Add a task
-          </Button>
-        </div>
+        {/* Quick Actions removed in favor of FAB */}
 
         {/* Today's Tasks Section */}
         <section className="mb-8">
@@ -539,6 +545,57 @@ const HomePage: React.FC = () => {
                   Add to Garden
                 </Button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Floating Action Button (FAB) */}
+      <button
+        onClick={() => setIsActionSheetOpen(true)}
+        className="fixed bottom-20 right-4 w-14 h-14 bg-green-600 hover:bg-green-700 active:bg-green-800 text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:shadow-xl active:scale-95 z-50"
+        aria-label="Open actions"
+      >
+        <Plus className="w-6 h-6" />
+      </button>
+
+      {/* Action Sheet Popup */}
+      {isActionSheetOpen && (
+        <div className="fixed inset-0 z-50">
+          <div
+            className="absolute inset-0 bg-black/40 animate-fadeIn"
+            onClick={() => setIsActionSheetOpen(false)}
+          />
+          <div className="absolute inset-x-0 bottom-0 p-4 pb-6 bg-white rounded-t-2xl shadow-2xl animate-fadeIn">
+            <div className="mx-auto h-1.5 w-12 rounded-full bg-gray-200 mb-4" />
+            <div className="grid grid-cols-1 gap-3">
+              {/* Add New Plant */}
+              <button
+                onClick={() => { setIsActionSheetOpen(false); navigate('/plants/add'); }}
+                className="w-full flex items-center gap-4 p-4 rounded-xl bg-green-50 hover:bg-green-100 active:scale-[0.98] transition-all border border-green-100"
+              >
+                <div className="w-12 h-12 rounded-lg bg-green-200 text-green-800 flex items-center justify-center">
+                  <Sprout className="w-6 h-6" />
+                </div>
+                <div className="text-left">
+                  <div className="text-base font-semibold text-green-900">Add New Plant</div>
+                  <div className="text-sm text-green-700">Create a plant entry in your garden</div>
+                </div>
+              </button>
+
+              {/* Add New Task */}
+              <button
+                onClick={() => { setIsActionSheetOpen(false); navigate('/tasks/add'); }}
+                className="w-full flex items-center gap-4 p-4 rounded-xl bg-blue-50 hover:bg-blue-100 active:scale-[0.98] transition-all border border-blue-100"
+              >
+                <div className="w-12 h-12 rounded-lg bg-blue-200 text-blue-800 flex items-center justify-center">
+                  <ClipboardCheck className="w-6 h-6" />
+                </div>
+                <div className="text-left">
+                  <div className="text-base font-semibold text-blue-900">Add New Task</div>
+                  <div className="text-sm text-blue-700">Schedule watering, pruning and more</div>
+                </div>
+              </button>
             </div>
           </div>
         </div>
