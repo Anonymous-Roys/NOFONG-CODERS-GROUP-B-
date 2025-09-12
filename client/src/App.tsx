@@ -22,8 +22,7 @@ import SignupPage from './pages/SignupPage/SignupPage';
 import ProfileCreatePage from './pages/ProfileCreatePage/ProfileCreatePage';
 import OtpPage from './pages/OtpPage/OtpPage';
 import { RequireAuth, PublicOnly } from './routes/guards';
-
-
+import './App.css';
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -56,33 +55,43 @@ function App() {
   }
 
   return (
-    <AuthProvider>
-    <Router>
-      <Routes>
-        {/* <Route path="" element={<DesignSystemShowcase/>} /> */}
-        <Route element={<PublicOnly /> }>
-          <Route path="/onboarding" element={<Onboarding />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/otp" element={<OtpPage />} />
-          <Route path="/profile/create" element={<ProfileCreatePage />} />
-        </Route>
-        <Route element={<RequireAuth /> }>
-        <Route path="/" element={<AppLayout />}>
-          <Route index element={<HomePage />} />
-          <Route path="garden" element={<GardenPage />} />
-          <Route path="plants" element={<PlantsPage />} />
-          <Route path="plants/:slug" element={<PlantDetailPage />} />
-          <Route path="journal" element={<JournalPage />} />
-          <Route path="profile" element={<ProfilePage />} />
-          <Route path="plants/add" element={<AddPlantPage />} />
-          <Route path="tasks/add" element={<AddTaskPage />} />
-          <Route path="tasks" element={<TaskManager />} />
-        </Route>
-        </Route>
-      </Routes>
-    </Router>
-    </AuthProvider>
+    <>
+      <div className="desktop-warning">
+        <div className="warning-content">
+          <h2>📱 Mobile Experience Only</h2>
+          <p>This gardening app is designed for mobile and tablet devices.</p>
+          <p>Please access it from your phone or tablet for the best experience.</p>
+        </div>
+      </div>
+      <div className="mobile-app">
+        <AuthProvider>
+          <Router>
+            <Routes>
+              <Route element={<PublicOnly />}>
+                <Route path="/onboarding" element={<Onboarding />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/signup" element={<SignupPage />} />
+                <Route path="/otp" element={<OtpPage />} />
+                <Route path="/profile/create" element={<ProfileCreatePage />} />
+              </Route>
+              <Route element={<RequireAuth />}>
+                <Route path="/" element={<AppLayout />}>
+                  <Route index element={<HomePage />} />
+                  <Route path="garden" element={<GardenPage />} />
+                  <Route path="plants" element={<PlantsPage />} />
+                  <Route path="plants/:slug" element={<PlantDetailPage />} />
+                  <Route path="journal" element={<JournalPage />} />
+                  <Route path="profile" element={<ProfilePage />} />
+                  <Route path="plants/add" element={<AddPlantPage />} />
+                  <Route path="tasks/add" element={<AddTaskPage />} />
+                  <Route path="tasks" element={<TaskManager />} />
+                </Route>
+              </Route>
+            </Routes>
+          </Router>
+        </AuthProvider>
+      </div>
+    </>
   );
 }
 
