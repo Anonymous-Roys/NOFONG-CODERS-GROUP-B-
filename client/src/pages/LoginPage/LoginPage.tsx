@@ -85,22 +85,7 @@ const LoginPage: React.FC = () => {
             </Button>
           </div>
           <p className="mt-8 text-sm text-center">
-            New to this app? <button 
-              onClick={async()=>{ 
-                const target = phone || prompt('Enter phone number') || ''; 
-                if (target) {
-                  const result = await sendOtp(target, 'register'); 
-                  if (result.success) {
-                    navigate('/otp', { state: { phone: target, purpose: 'register' } });
-                  }
-                }
-              }} 
-              className="underline" 
-              style={{color:'var(--color-brand)'}}
-              disabled={loading}
-            >
-              Register
-            </button>
+            New to this app? <a href="/signup" className="underline" style={{color:'var(--color-brand)'}}>Register</a>
           </p>
         </div>
       </div>

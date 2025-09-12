@@ -35,7 +35,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       setPhone(newPhone);
       setLastPurpose(purpose);
-      await apiFetch('/otp/send', { method: 'POST', body: JSON.stringify({ phone: newPhone, purpose }) });
+      const response = await apiFetch('/otp/send', { method: 'POST', body: JSON.stringify({ phone: newPhone, purpose }) });
+      
+      // Log OTP to console for development
+      if (response.devCode) {
+        console.log(`🔐 OTP for ${newPhone}: ${response.devCode}`);
+      }
+      
       setStatus('otp_sent');
       return { success: true };
     } catch (err: any) {
