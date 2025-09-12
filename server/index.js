@@ -10,6 +10,7 @@ const { handleLogin, handleRegister, authenticateToken, handleLogout, sendOtp, v
 const homeRoutes = require("./routes/home");
 const plantRoutes = require("./routes/plant");
 const taskRoutes = require("./routes/task");
+const gardenRoutes = require("./routes/garden");
 
 const app = express();
 
@@ -49,6 +50,7 @@ app.get("/protected", authenticateToken, (req, res) => {
 app.use("/api/home", authenticateToken, homeRoutes);
 app.use("/api/plant", plantRoutes); 
 app.use("/api/tasks", taskRoutes);
+app.use("/api/gardens", authenticateToken, gardenRoutes);
 
 // ===== Error Handling =====
 app.use((err, req, res, next) => {
