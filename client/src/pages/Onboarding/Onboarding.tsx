@@ -12,7 +12,7 @@ type Slide = {
 
 const slides: Slide[] = [
   {
-    title: 'Welcome to App name',
+    title: 'Welcome to Bloom Buddy',
     subtitle: 'Your Personal Gardening Helper',
     body: 'Track your plants, get reminders, and keep your garden thriving with ease.',
     image: '1.png',
@@ -62,24 +62,24 @@ const Onboarding: React.FC = () => {
   const slide = slides[current];
 
   return (
-    <div className="min-h-screen flex flex-col px-4 pt-8 pb-6 bg-white">
-      <div className="rounded-3xl bg-primary-200 p-4 mx-auto w-full max-w-sm">
-        <img src={slide.image} alt="Onboarding visual" className="w-full h-auto rounded-2xl object-cover" />
+    <div className="flex flex-col min-h-screen px-4 pt-8 pb-6 bg-white">
+      <div className="w-full max-w-sm p-4 mx-auto rounded-3xl bg-primary-200">
+        <img src={slide.image} alt="Onboarding visual" className="object-cover w-full h-auto rounded-2xl" />
       </div>
 
-      <div className="mt-8 max-w-sm mx-auto w-full">
+      <div className="w-full max-w-sm mx-auto mt-8">
         <h1 className="text-3xl font-extrabold text-brand">{slide.title}</h1>
         <p className="mt-3 font-semibold text-gray-800">{slide.subtitle}</p>
         <p className="mt-2 text-gray-600">{slide.body}</p>
 
-        <div className="mt-8 flex items-center justify-center gap-2" aria-label="Onboarding progress">
+        <div className="flex items-center justify-center gap-2 mt-8" aria-label="Onboarding progress">
           {slides.map((_, i) => (
             <Indicator key={i} index={i} current={current} />
           ))}
         </div>
 
         {current < slides.length - 1 ? (
-          <div className="mt-8 flex items-center justify-between">
+          <div className="flex items-center justify-between mt-8">
             {current > 0 ? (
               <Button variant="ghost" size="md" onClick={prev}>Back</Button>
             ) : (
@@ -88,17 +88,17 @@ const Onboarding: React.FC = () => {
             <Button variant="primary" size="md" onClick={next}>Next</Button>
           </div>
         ) : (
-          <div className="mt-8 grid grid-cols-1 gap-3">
+          <div className="grid grid-cols-1 gap-3 mt-8">
             <Button variant="primary" size="lg" onClick={() => finishTo('/signup')}>{slide.cta ?? 'Begin your journey'}</Button>
             <Button variant="outline" size="md" onClick={() => finishTo('/login')}>Log in</Button>
           </div>
         )}
 
-        <div className="mt-6 flex items-center justify-between text-gray-600">
+        <div className="flex items-center justify-between mt-6 text-gray-600">
           <button className="underline" onClick={skip}>Skip</button>
           <span>
             Already have an account?{' '}
-            <Link className="text-brand font-semibold underline" to="/login">Log in here</Link>
+            <Link className="font-semibold underline text-brand" to="/login">Log in here</Link>
           </span>
         </div>
       </div>

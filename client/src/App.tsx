@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import AppLayout from './components/layout/AppLayout';
 import GardenPage from './pages/GardenPage/GardenPage';
+import GardenDetailPage from './pages/GardenDetailPage/GardenDetailPage';
 import PlantsPage from './pages/PlantsPage/PlantsPage';
 import JournalPage from './pages/JournalPage/JournalPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
@@ -78,6 +79,7 @@ function App() {
                 <Route path="/" element={<AppLayout />}>
                   <Route index element={<HomePage />} />
                   <Route path="garden" element={<GardenPage />} />
+                  <Route path="garden/:id" element={<GardenDetailPage />} />
                   <Route path="plants" element={<PlantsPage />} />
                   <Route path="plants/:slug" element={<PlantDetailPage />} />
                   <Route path="journal" element={<JournalPage />} />

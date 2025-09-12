@@ -9,10 +9,8 @@ const SignupPage: React.FC = () => {
   const { verifyOtp, completeProfile, loading, error: authError, clearError } = useAuth();
   const [error, setError] = useState<string>('');
   const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const [dob, setDob] = useState('');
   const [location, setLocation] = useState('');
-  const [gender, setGender] = useState<'Male'|'Female'|'Other'|''>('');
   const [step, setStep] = useState<'otp' | 'profile'>('otp');
   const navigate = useNavigate();
 
@@ -65,7 +63,7 @@ const SignupPage: React.FC = () => {
         {step === 'otp' ? (
           <>
             <div className="mb-3" style={{color:'var(--color-text-strong)'}}>Enter OTP</div>
-            <OTPInput length={6} onComplete={handleComplete} disabled={loading} />
+            <OTPInput length={6} onComplete={handleComplete} />
             {(error || authError) && <p className="mt-2 text-sm" style={{color:'#dc2626'}}>{error || authError}</p>}
           </>
         ) : (

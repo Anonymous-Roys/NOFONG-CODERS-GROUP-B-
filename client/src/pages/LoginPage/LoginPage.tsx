@@ -31,11 +31,11 @@ const LoginPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4" style={{backgroundColor: 'var(--color-white)'}}>
+    <div className="flex items-center justify-center min-h-screen px-4" style={{backgroundColor: 'var(--color-white)'}}>
       <div className="w-full max-w-md">
-        <div className="bg-white/80 rounded-2xl p-6 shadow-md border" style={{borderColor:'var(--color-border-gray)'}}>
+        <div className="p-6 border shadow-md bg-white/80 rounded-2xl" style={{borderColor:'var(--color-border-gray)'}}>
           <div className="flex flex-col items-center gap-4 mb-8">
-            <div className="w-24 h-24 rounded-full" style={{backgroundColor:'var(--color-light-green)'}} />
+            <img src="/logo.png" alt="logo" width={80}/>
             <h1 className="text-2xl font-semibold" style={{fontFamily:'var(--font-family-heading)', color:'var(--color-text-strong)'}}>Log In</h1>
           </div>
 
@@ -75,16 +75,16 @@ const LoginPage: React.FC = () => {
           </div>
 
           <div className="grid gap-3">
-            <Button variant="secondary" className="w-full flex items-center justify-center gap-3">
+            <Button variant="secondary" className="flex items-center justify-center w-full gap-3">
               <span className="text-lg">G</span>
               Continue with Google
             </Button>
-            <Button variant="secondary" className="w-full flex items-center justify-center gap-3">
+            <Button variant="secondary" className="flex items-center justify-center w-full gap-3">
               <span className="text-lg"></span>
               Continue with Apple
             </Button>
           </div>
-          <p className="text-center mt-8 text-sm">
+          <p className="mt-8 text-sm text-center">
             New to this app? <button 
               onClick={async()=>{ 
                 const target = phone || prompt('Enter phone number') || ''; 

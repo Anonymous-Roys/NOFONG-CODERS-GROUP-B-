@@ -62,19 +62,19 @@ const OtpPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4" style={{backgroundColor: 'var(--color-white)'}}>
+    <div className="flex items-center justify-center min-h-screen px-4" style={{backgroundColor: 'var(--color-white)'}}>
       <div className="w-full max-w-md">
         <div className="flex flex-col items-center gap-6 mb-8">
-          <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{backgroundColor:'var(--color-light-green)'}}>
+          <div className="flex items-center justify-center w-16 h-16 rounded-full" style={{backgroundColor:'var(--color-light-green)'}}>
             <span style={{color:'var(--color-brand)'}}>🔐</span>
           </div>
           <h1 className="text-2xl font-semibold" style={{fontFamily:'var(--font-family-heading)', color:'var(--color-text-strong)'}}>Enter verification code</h1>
           <p className="text-sm text-gray-600">We sent a code to {state.phone || 'your phone'}</p>
         </div>
 
-        <OTPInput length={6} onComplete={onComplete} disabled={loading} />
+        <OTPInput length={6} onComplete={onComplete} />
         {(error || authError) && (
-          <div className="mt-2 p-3 rounded-lg" style={{backgroundColor:'#fef2f2', border:'1px solid #fecaca'}}>
+          <div className="p-3 mt-2 rounded-lg" style={{backgroundColor:'#fef2f2', border:'1px solid #fecaca'}}>
             <p className="text-sm" style={{color:'#dc2626'}}>
               {error || authError}
             </p>
@@ -91,7 +91,7 @@ const OtpPage: React.FC = () => {
           </div>
         )}
 
-        <div className="mt-6 flex items-center justify-between">
+        <div className="flex items-center justify-between mt-6">
           <Button variant="ghost" onClick={()=>navigate(-1)} disabled={loading}>Back</Button>
           <Button 
             onClick={resend} 
@@ -102,7 +102,7 @@ const OtpPage: React.FC = () => {
         </div>
         
         {attempts > 0 && (
-          <p className="mt-4 text-center text-sm" style={{color:'var(--color-medium-gray)'}}>
+          <p className="mt-4 text-sm text-center" style={{color:'var(--color-medium-gray)'}}>
             Having trouble? Make sure you entered the 6-digit code sent to {state.phone}
           </p>
         )}
