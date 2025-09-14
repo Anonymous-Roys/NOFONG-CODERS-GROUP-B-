@@ -20,12 +20,16 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "*",
-    // credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
+    origin: "https://nofong-coders-group-b.vercel.app", // 👈 your frontend domain
+    credentials: true, // 👈 allow cookies/headers
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
   })
 );
+
+// Handle preflight
+app.options("*", cors());
+
 
 // ===== MongoDB Connection =====
 mongoose
