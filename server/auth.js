@@ -87,7 +87,9 @@ async function handleLogin(req, res) {
     res.cookie('auth_token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours,
+       secure: true,      // required on Vercel/Render (HTTPS)
+  sameSite: "none"   // required for cross-origin cookies
     });
     res.json({
       message: 'Welcome back!',
@@ -191,8 +193,10 @@ async function verifyOtp(req, res) {
       );
       res.cookie('auth_token', token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        maxAge: 24 * 60 * 60 * 1000
+        // secure: process.env.NODE_ENV === 'production',
+        maxAge: 24 * 60 * 60 * 1000,
+         secure: true,      // required on Vercel/Render (HTTPS)
+  sameSite: "none"   // required for cross-origin cookies
       });
       return res.json({ message: 'Welcome back!', token, user: { id: user._id, username: user.username, phone: user.phone } });
     }
