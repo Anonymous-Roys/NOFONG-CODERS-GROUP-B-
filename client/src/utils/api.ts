@@ -1,5 +1,4 @@
 export const API_BASE = 'https://nofong-coders-group-b.onrender.com';
-// export const API_BASE = 'http://localhost:3000';
 
 export async function apiFetch(path: string, options: RequestInit = {}) {
   try {
