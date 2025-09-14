@@ -56,9 +56,9 @@ const BottomNavigation: React.FC = () => {
 
   return (
     <>
-      <div className="fixed bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/5 to-transparent pointer-events-none" />
-      <nav className="fixed bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-100/50 px-2 py-1">
-      <div className="flex items-end justify-around relative pb-2">
+      <div className="fixed bottom-0 left-0 right-0 h-24 pointer-events-none bg-gradient-to-t from-black/5 to-transparent" />
+      <nav className="fixed px-2 py-1 border shadow-2xl bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md rounded-2xl border-gray-100/50">
+      <div className="relative flex items-end justify-around pb-2">
         {navigationItems.map((item) => {
           const Icon = item.icon;
           const active = isActive(item.path);
@@ -82,7 +82,7 @@ const BottomNavigation: React.FC = () => {
                 }`}>
                   <div className={`w-14 h-14 rounded-full border-2 flex items-center justify-center transition-all duration-300 home-button-elevated ${
                     active 
-                      ? 'bg-green-600 border-green-600 shadow-lg shadow-green-200 active' 
+                      ? 'bg-green-600 text-white border-green-600 shadow-lg shadow-green-200 active' 
                       : 'bg-white border-green-600 shadow-md'
                   }`}>
                     <Icon className={`w-6 h-6 transition-colors duration-300 ${

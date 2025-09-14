@@ -133,7 +133,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const me = await apiFetch('/protected');
         setUser({ id: me?.userId || 'me', name: me?.username });
         setStatus('authenticated');
-      } catch {
+      } catch (err: any) {
+        console.log('No active session found');
         setStatus('unauthenticated');
       }
     })();

@@ -73,6 +73,13 @@ const OtpPage: React.FC = () => {
         </div>
 
         <OTPInput length={6} onComplete={onComplete} />
+        
+        {/* Development OTP Display */}
+        <div className="p-3 mt-4 rounded-lg" style={{backgroundColor:'#f0f9ff', border:'1px solid #0ea5e9'}}>
+          <p className="text-sm font-medium" style={{color:'#0369a1'}}>🔧 Development Mode</p>
+          <p className="text-xs" style={{color:'#0369a1'}}>Check browser console for OTP</p>
+        </div>
+        
         {(error || authError) && (
           <div className="p-3 mt-2 rounded-lg" style={{backgroundColor:'#fef2f2', border:'1px solid #fecaca'}}>
             <p className="text-sm" style={{color:'#dc2626'}}>

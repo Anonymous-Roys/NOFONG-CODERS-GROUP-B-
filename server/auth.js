@@ -140,14 +140,20 @@ async function sendOtp(req, res) {
       }
     }
 
-    const code = ('' + Math.floor(100000 + Math.random() * 900000));
+    // Use fixed OTP for development, random for production
+    const code = process.env.NODE_ENV === 'production' 
+      ? ('' + Math.floor(100000 + Math.random() * 900000))
+      : '123456';
+    
     console.log(`OTP for ${phone}: ${code}`);
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
     
     await Otp.deleteMany({ phone, purpose });
     await Otp.create({ phone, code, purpose, expiresAt });
     
-    // TODO: integrate SMS provider here
+    // TODO: integrate WhatsApp API here
+    // await sendWhatsAppOTP(phone, code);
+    
     res.json({ 
       message: 'Verification code sent to your phone',
       devCode: process.env.NODE_ENV !== 'production' ? code : undefined 

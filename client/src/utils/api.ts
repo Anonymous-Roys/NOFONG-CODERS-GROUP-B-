@@ -1,18 +1,31 @@
 export const API_BASE = 'https://nofong-coders-group-b.onrender.com';
 
 export async function apiFetch(path: string, options: RequestInit = {}) {
-  const res = await fetch(`${API_BASE}${path}`, {
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
-    ...options,
-  });
-  const contentType = res.headers.get('content-type') || '';
-  const body = contentType.includes('application/json') ? await res.json() : await res.text();
-  if (!res.ok) {
-    const message = typeof body === 'string' ? body : body?.message || 'Request failed';
-    throw new Error(message);
+  try {
+    const res = await fetch(`${API_BASE}${path}`, {
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+      ...options,
+    });
+    
+    const contentType = res.headers.get('content-type') || '';
+    const body = contentType.includes('application/json') ? await res.json() : await res.text();
+    
+    if (!res.ok) {
+      const message = typeof body === 'string' ? body : body?.message || `Request failed with status ${res.status}`;
+      const error = new Error(message);
+      (error as any).status = res.status;
+      (error as any).field = body?.field;
+      throw error;
+    }
+    
+    return body;
+  } catch (err) {
+    if (err instanceof TypeError && err.message.includes('fetch')) {
+      throw new Error('Network error. Please check your connection.');
+    }
+    throw err;
   }
-  return body;
 }
 
 export function parseJwt<T = any>(token: string): T | null {

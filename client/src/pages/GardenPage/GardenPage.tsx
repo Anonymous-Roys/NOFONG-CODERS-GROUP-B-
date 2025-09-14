@@ -186,12 +186,15 @@ const CreateGardenModal: React.FC<{ onClose: () => void; onSuccess: () => void }
 
     setLoading(true);
     try {
-      await apiFetch('/api/gardens', {
+      console.log('Submitting garden:', { name: name.trim(), location });
+      const result = await apiFetch('/api/gardens', {
         method: 'POST',
         body: JSON.stringify({ name: name.trim(), location })
       });
+      console.log('Garden created:', result);
       onSuccess();
     } catch (err: any) {
+      console.error('Garden creation failed:', err);
       setError(err.message || 'Failed to create garden');
     } finally {
       setLoading(false);
