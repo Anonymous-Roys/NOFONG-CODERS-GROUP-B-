@@ -126,9 +126,11 @@ async function sendOtp(req, res) {
       }
     }
     const code = ('' + Math.floor(100000 + Math.random() * 900000));
+
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
     await Otp.deleteMany({ phone, purpose });
     await Otp.create({ phone, code, purpose, expiresAt });
+
     // Send SMS using MNotify
     try {
       await mnotify.sms.sendQuickBulkSMS({
@@ -140,6 +142,7 @@ async function sendOtp(req, res) {
       console.error('SMS sending error:', smsErr);
     }
     res.json({ message: 'Verification code sent to your phone', devCode: process.env.NODE_ENV !== 'production' ? code : undefined });
+
   } catch (err) {
     console.error('Send OTP error:', err);
     res.status(500).json({ message: 'Failed to send verification code. Please try again.' });
