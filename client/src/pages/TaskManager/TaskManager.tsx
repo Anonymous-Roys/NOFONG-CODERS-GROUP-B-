@@ -4,39 +4,6 @@ import type { CareTask, Plant, TaskType } from '../../types';
 import { usePlants } from '../../hooks/usePlants';
 import { useNavigate } from 'react-router-dom';
 
-// Mock task data
-const mockTasks: CareTask[] = [
-  {
-    id: '1',
-    plantId: '1',
-    type: 'water',
-    dueDate: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
-    completed: false,
-    isLate: true,
-    daysLate: 1,
-  },
-  {
-    id: '2',
-    plantId: '2',
-    type: 'water',
-    dueDate: new Date(Date.now() + 2 * 60 * 60 * 1000), // 2 hours from now
-    completed: false,
-  },
-  {
-    id: '3',
-    plantId: '1',
-    type: 'prune',
-    dueDate: new Date(Date.now() + 24 * 60 * 60 * 1000), // 1 day from now
-    completed: false,
-  },
-  {
-    id: '4',
-    plantId: '2',
-    type: 'repot',
-    dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 days from now
-    completed: false,
-  },
-];
 
 const taskTypes: TaskType[] = [
   { id: 'water', label: 'Water', icon: '💧' },
@@ -61,15 +28,15 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, plant, onComplete, onSnooze }
   });
 
   return (
-    <div className="bg-green-50 rounded-xl p-4 mb-4 border border-green-100">
+    <div className="p-4 mb-4 border border-green-100 bg-green-50 rounded-xl">
       <div className="flex items-start space-x-4">
         {/* Plant Image */}
-        <div className="w-16 h-16 rounded-full bg-green-200 flex items-center justify-center flex-shrink-0">
+        <div className="flex items-center justify-center flex-shrink-0 w-16 h-16 bg-green-200 rounded-full">
           {plant.imageUrl ? (
             <img 
               src={plant.imageUrl} 
               alt={plant.name}
-              className="w-full h-full rounded-full object-cover"
+              className="object-cover w-full h-full rounded-full"
             />
           ) : (
             <span className="text-2xl">🌿</span>
@@ -80,7 +47,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, plant, onComplete, onSnooze }
         <div className="flex-1">
           <div className="flex items-start justify-between">
             <div>
-              <h3 className="font-bold text-lg text-gray-800">
+              <h3 className="text-lg font-bold text-gray-800">
                 {plant.name} - {taskType?.label}
               </h3>
               <p className="text-gray-600">Time: {timeString}</p>
@@ -95,7 +62,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, plant, onComplete, onSnooze }
           {/* Late Badge */}
           {task.isLate && task.daysLate && (
             <div className="mt-2">
-              <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-sm font-medium">
+              <span className="px-2 py-1 text-sm font-medium text-orange-800 bg-orange-100 rounded-full">
                 {task.daysLate === 1 ? 'One day late' : `${task.daysLate} days late`}
               </span>
             </div>
@@ -139,7 +106,7 @@ interface TaskTypeSelectorProps {
 const TaskTypeSelector: React.FC<TaskTypeSelectorProps> = ({ selectedType, onSelectType }) => {
   return (
     <div className="space-y-4">
-      <h2 className="text-green-600 font-semibold text-lg">What do you want to do?</h2>
+      <h2 className="text-lg font-semibold text-green-600">What do you want to do?</h2>
       <div className="grid grid-cols-2 gap-4">
         {taskTypes.map((type) => (
           <button
@@ -152,7 +119,7 @@ const TaskTypeSelector: React.FC<TaskTypeSelectorProps> = ({ selectedType, onSel
             }`}
           >
             <div className="text-center">
-              <div className="text-3xl mb-2">{type.icon}</div>
+              <div className="mb-2 text-3xl">{type.icon}</div>
               <div className="font-medium text-gray-800">{type.label}</div>
             </div>
           </button>
@@ -171,7 +138,7 @@ interface PlantSelectorProps {
 const PlantSelector: React.FC<PlantSelectorProps> = ({ plants, selectedPlant, onSelectPlant }) => {
   return (
     <div className="space-y-4">
-      <h2 className="text-green-600 font-semibold text-lg">Which plant?</h2>
+      <h2 className="text-lg font-semibold text-green-600">Which plant?</h2>
       <div className="grid grid-cols-3 gap-4">
         {plants.map((plant) => (
           <button
@@ -183,12 +150,12 @@ const PlantSelector: React.FC<PlantSelectorProps> = ({ plants, selectedPlant, on
                 : 'bg-white border-2 border-gray-200 hover:border-gray-300'
             }`}
           >
-            <div className="w-16 h-16 rounded-full bg-green-200 flex items-center justify-center">
+            <div className="flex items-center justify-center w-16 h-16 bg-green-200 rounded-full">
               {plant.imageUrl ? (
                 <img 
                   src={plant.imageUrl} 
                   alt={plant.name}
-                  className="w-full h-full rounded-full object-cover"
+                  className="object-cover w-full h-full rounded-full"
                 />
               ) : (
                 <span className="text-2xl">🌿</span>
@@ -290,18 +257,7 @@ export const TaskManager: React.FC<TaskManagerProps> = ({ onBack }) => {
   const handleNext = async () => {
     if (selectedTaskType && selectedPlant) {
       try {
-        const newTask = await apiFetch('/api/tasks', {
-          method: 'POST',
-          body: JSON.stringify({
-            type: selectedTaskType,
-            plantId: selectedPlant,
-            time: '08:00',
-            date: new Date(Date.now() + 24 * 60 * 60 * 1000),
-            frequency: 'Daily',
-            alarmEnabled: true,
-            notificationEnabled: true
-          })
-        });
+        
         fetchTasks();
         setCurrentView('tasks');
       } catch (err) {
@@ -320,9 +276,9 @@ export const TaskManager: React.FC<TaskManagerProps> = ({ onBack }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+          <div className="w-12 h-12 mx-auto mb-4 border-b-2 border-green-600 rounded-full animate-spin"></div>
           <p className="text-gray-600">Loading tasks...</p>
         </div>
       </div>
@@ -360,17 +316,17 @@ export const TaskManager: React.FC<TaskManagerProps> = ({ onBack }) => {
         </div>
 
         {/* Footer */}
-        <div className="fixed bottom-0 left-0 right-0 bg-white p-6 border-t border-gray-200">
+        <div className="fixed bottom-0 left-0 right-0 p-6 bg-white border-t border-gray-200">
           <button
             onClick={handleNext}
             disabled={!selectedTaskType || !selectedPlant}
-            className="w-full bg-green-600 text-white py-4 rounded-lg font-semibold text-lg disabled:bg-gray-300 disabled:cursor-not-allowed"
+            className="w-full py-4 text-lg font-semibold text-white bg-green-600 rounded-lg disabled:bg-gray-300 disabled:cursor-not-allowed"
           >
             Next
           </button>
           
           {/* Pagination dots */}
-          <div className="flex justify-center space-x-2 mt-4">
+          <div className="flex justify-center mt-4 space-x-2">
             <div className="w-2 h-2 bg-green-600 rounded-full"></div>
             <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
             <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
@@ -396,21 +352,21 @@ export const TaskManager: React.FC<TaskManagerProps> = ({ onBack }) => {
           <h1 className="text-xl font-semibold text-green-600">Tasks</h1>
           <div className="w-6"></div>
         </div>
-        <div className="border-b-2 border-blue-500 mx-4"></div>
+        <div className="mx-4 border-b-2 border-blue-500"></div>
       </div>
 
       {/* Banner */}
-      <div className="bg-green-100 mx-4 mt-4 rounded-lg p-4">
-        <p className="text-center text-gray-700 font-medium">Manage all your tasks</p>
+      <div className="p-4 mx-4 mt-4 bg-green-100 rounded-lg">
+        <p className="font-medium text-center text-gray-700">Manage all your tasks</p>
       </div>
 
       {/* Content */}
       <div className="p-4">
         {/* Today Section */}
         <div className="mb-8">
-          <h2 className="text-green-600 font-bold text-xl mb-4">Today</h2>
+          <h2 className="mb-4 text-xl font-bold text-green-600">Today</h2>
           {todayTasks.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">No tasks for today</p>
+            <p className="py-8 text-center text-gray-500">No tasks for today</p>
           ) : (
             todayTasks.map(task => {
               const plant = plants.find(p => p.id === task.plantId);
@@ -430,9 +386,9 @@ export const TaskManager: React.FC<TaskManagerProps> = ({ onBack }) => {
 
         {/* Upcoming Section */}
         <div className="mb-20">
-          <h2 className="text-green-600 font-bold text-xl mb-4">Upcoming</h2>
+          <h2 className="mb-4 text-xl font-bold text-green-600">Upcoming</h2>
           {upcomingTasks.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">No upcoming tasks</p>
+            <p className="py-8 text-center text-gray-500">No upcoming tasks</p>
           ) : (
             upcomingTasks.map(task => {
               const plant = plants.find(p => p.id === task.plantId);
@@ -455,7 +411,7 @@ export const TaskManager: React.FC<TaskManagerProps> = ({ onBack }) => {
       <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200">
         <button
           onClick={handleAddNewTask}
-          className="w-full bg-green-600 text-white py-4 rounded-lg font-semibold text-lg hover:bg-green-700 transition-colors"
+          className="w-full py-4 text-lg font-semibold text-white transition-colors bg-green-600 rounded-lg hover:bg-green-700"
         >
           Add New Task
         </button>

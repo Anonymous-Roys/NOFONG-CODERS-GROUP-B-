@@ -93,9 +93,9 @@ const PlantDetailPage: React.FC = () => {
       <div className="max-w-md mx-auto bg-white">
         {/* Plant Image */}
         <div className="relative">
-          {displayPlant.imageUrl || displayPlant.image ? (
+          {displayPlant.imageUrl ? (
             <img
-              src={displayPlant.imageUrl || displayPlant.image}
+              src={displayPlant.imageUrl}
               alt={displayPlant.name}
               className="w-full h-64 object-cover"
             />
@@ -109,7 +109,7 @@ const PlantDetailPage: React.FC = () => {
         {/* Plant Info */}
         <div className="p-6">
           <h2 className="text-2xl font-bold text-green-600 mb-2">{displayPlant.name}</h2>
-          <p className="text-gray-600 mb-4">{displayPlant.category || 'Plant'}</p>
+          <p className="text-gray-600 mb-4">{displayPlant.species || 'Plant'}</p>
           
           <p className="text-gray-700 mb-4">
             {showFullDescription ? displayPlant.description : `${displayPlant.description.substring(0, 100)}...`}
