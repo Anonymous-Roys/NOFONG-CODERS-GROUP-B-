@@ -9,7 +9,7 @@ router.post("/", authenticateToken, async (req, res) => {
   try {
     const { name, species, description, difficulty, careFrequency, category, image, notes, photoUrl, gardenId } = req.body;
     if (!name || !gardenId) {
-      return res.status(400).json({ message: name+'Plant name and garden are required' });
+      return res.status(400).json({ message: 'Plant name and garden are required' });
     }
     
     // Verify garden belongs to user

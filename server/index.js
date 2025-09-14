@@ -28,7 +28,7 @@ app.use(
 );
 
 // Handle preflight
-app.options("*", cors());
+// app.options("*", cors());
 
 
 // ===== MongoDB Connection =====

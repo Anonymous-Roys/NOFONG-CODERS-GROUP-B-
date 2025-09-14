@@ -86,7 +86,7 @@ async function handleLogin(req, res) {
     );
     res.cookie('auth_token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      // secure: process.env.NODE_ENV === 'production',
       maxAge: 24 * 60 * 60 * 1000, // 24 hours,
        secure: true,      // required on Vercel/Render (HTTPS)
   sameSite: "none"   // required for cross-origin cookies
