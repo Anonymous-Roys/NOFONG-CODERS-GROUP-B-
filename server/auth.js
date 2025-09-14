@@ -126,7 +126,7 @@ async function sendOtp(req, res) {
       }
     }
     const code = ('' + Math.floor(100000 + Math.random() * 900000));
-
+    console.log(`Generated OTP for ${phone}: ${code}`);
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
     await Otp.deleteMany({ phone, purpose });
     await Otp.create({ phone, code, purpose, expiresAt });

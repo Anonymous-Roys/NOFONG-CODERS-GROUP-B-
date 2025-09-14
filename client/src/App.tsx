@@ -23,6 +23,7 @@ import SignupPage from './pages/SignupPage/SignupPage';
 import ProfileCreatePage from './pages/ProfileCreatePage/ProfileCreatePage';
 import OtpPage from './pages/OtpPage/OtpPage';
 import { RequireAuth, PublicOnly } from './routes/guards';
+import ComingSoon from './components/ComingSoon';
 import './App.css';
 
 function App() {
@@ -95,6 +96,7 @@ function App() {
                   <Route path="plants/add" element={<AddPlantPage />} />
                   <Route path="tasks/add" element={<AddTaskPage />} />
                   <Route path="tasks" element={<TaskManager />} />
+                  <Route path="coming-soon" element={<ComingSoon />} />
                 </Route>
               </Route>
             </Routes>

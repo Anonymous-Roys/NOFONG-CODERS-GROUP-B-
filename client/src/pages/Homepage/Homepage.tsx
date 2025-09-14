@@ -1,5 +1,6 @@
 // src/pages/HomePage/HomePage.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { apiFetch } from '../../utils/api';
 import { 
   Search, 
   Plus, 
@@ -46,59 +47,61 @@ const HomePage: React.FC = () => {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [selectedPlant, setSelectedPlant] = useState<PopularPlant | null>(null);
-  const [tasks, setTasks] = useState<Task[]>([
-    {
-      id: '1',
-      type: 'Prune',
-      plantName: 'Tomato de tropic',
-      location: 'Backyard',
-      isCompleted: false,
-      imageUrl: 'imagetomato.jpg',
-      description: 'Click to learn how to prune'
-    },
-    
-  ]);
+  const [tasks, setTasks] = useState<Task[]>([]);
+
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  const fetchTasks = async () => {
+    try {
+      const data = await apiFetch('/api/tasks');
+      setTasks(data.map((task: any) => ({
+        id: task._id,
+        type: task.type,
+        plantName: task.plantId?.name || 'Unknown Plant',
+        location: 'Garden',
+        isCompleted: task.completed,
+        imageUrl: task.plantId?.photoUrl || task.plantId?.image || 'imagetomato.jpg',
+        description: `Click to learn how to ${task.type}`
+      })));
+    } catch (err) {
+      console.error('Failed to fetch tasks:', err);
+    }
+  };
 
   const [todayTasksCompleted, setTodayTasksCompleted] = useState(0);
   const totalTodayTasks = tasks.length;
 
-  const popularPlants: PopularPlant[] = [
-    {
-      id: '1',
-      name: 'Aloe Vera',
-      description: 'Easy to care for, great for beginners',
-      imageUrl: 'https://images.unsplash.com/photo-1509587584298-0f3b3a3a1797?w=100&h=100&fit=crop&crop=center'
-    },
-    {
-      id: '2',
-      name: 'Snake Plant',
-      description: 'Thrives in low light conditions',
-      imageUrl: 'https://images.unsplash.com/photo-1600411833196-7c1f6b1a8b90?w=100&h=100&fit=crop&crop=center'
-    },
-    {
-      id: '3',
-      name: 'Pothos',
-      description: 'Fast-growing trailing plant',
-      imageUrl: 'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?w=100&h=100&fit=crop&crop=center'
-    },
-    {
-      id: '4',
-      name: 'ZZ Plant',
-      description: 'Drought tolerant and low maintenance',
-      imageUrl: 'https://images.unsplash.com/photo-1632207691143-643e2a9a9361?w=100&h=100&fit=crop&crop=center'
-    }
-  ];
+  const [popularPlants, setPopularPlants] = useState<PopularPlant[]>([]);
 
-  const handleTaskComplete = (taskId: string) => {
-    setTasks(prev => prev.map(task => 
-      task.id === taskId ? { ...task, isCompleted: !task.isCompleted } : task
-    ));
-    
-    const task = tasks.find(t => t.id === taskId);
-    if (task && !task.isCompleted) {
+  useEffect(() => {
+    fetchPopularPlants();
+  }, []);
+
+  const fetchPopularPlants = async () => {
+    try {
+      const data = await apiFetch('/api/plant-library?limit=4');
+      setPopularPlants(data.slice(0, 4).map((plant: any) => ({
+        id: plant._id,
+        name: plant.name,
+        description: plant.description,
+        imageUrl: plant.image || '/1.png'
+      })));
+    } catch (err) {
+      console.error('Failed to fetch popular plants:', err);
+    }
+  };
+
+  const handleTaskComplete = async (taskId: string) => {
+    try {
+      await apiFetch(`/api/tasks/${taskId}/complete`, { method: 'PATCH' });
+      setTasks(prev => prev.map(task => 
+        task.id === taskId ? { ...task, isCompleted: true } : task
+      ));
       setTodayTasksCompleted(prev => prev + 1);
-    } else if (task && task.isCompleted) {
-      setTodayTasksCompleted(prev => prev - 1);
+    } catch (err) {
+      console.error('Failed to complete task:', err);
     }
   };
 
@@ -112,7 +115,7 @@ const HomePage: React.FC = () => {
   };
 
   const handleAddNewPlant = () => {
-    navigate('/plants/add');
+    navigate('/plants');
   };
 
   const handleAddNewTask = () => {
@@ -208,14 +211,14 @@ const HomePage: React.FC = () => {
               </button>
               <hr className="my-3" />
               <button 
-                onClick={() => { navigate('/profile'); setIsMenuOpen(false); }}
+                onClick={() => { navigate('/coming-soon'); setIsMenuOpen(false); }}
                 className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 text-left"
               >
                 <Settings className="w-5 h-5 text-gray-600" />
                 <span className="text-gray-800">Settings</span>
               </button>
               <button 
-                onClick={() => { navigate('/profile'); setIsMenuOpen(false); }}
+                onClick={() => { navigate('/coming-soon'); setIsMenuOpen(false); }}
                 className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 text-left"
               >
                 <HelpCircle className="w-5 h-5 text-gray-600" />

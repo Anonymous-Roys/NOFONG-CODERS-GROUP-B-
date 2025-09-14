@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { Plant } from '../types';
+import { apiFetch } from '../utils/api';
 
 
 // Mock data for development
@@ -111,15 +112,20 @@ export const usePlants = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Simulate API call
     const fetchPlants = async () => {
       try {
         setLoading(true);
-        // In a real app, this would be an API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        setPlants(mockPlants);
+        // Try to fetch from plant library API, fallback to mock data
+        try {
+          const libraryPlants = await apiFetch('/api/plant-library');
+          setPlants(libraryPlants);
+        } catch (apiErr) {
+          console.warn('API not available, using mock data:', apiErr);
+          setPlants(mockPlants);
+        }
       } catch (err) {
         setError('Failed to load plants');
+        setPlants(mockPlants); // Fallback to mock data
       } finally {
         setLoading(false);
       }
@@ -143,7 +149,11 @@ export const usePlants = () => {
   };
 
   const getPlantBySlug = (slug: string): Plant | undefined => {
-    return plants.find(plant => plant.slug === slug);
+    return plants.find(plant => plant.slug === slug || plant.id === slug);
+  };
+
+  const getPlantById = (id: string): Plant | undefined => {
+    return plants.find(plant => plant.id === id);
   };
 
   return {
@@ -152,5 +162,6 @@ export const usePlants = () => {
     error,
     waterPlant,
     getPlantBySlug,
+    getPlantById,
   };
 };

@@ -9,13 +9,13 @@ const ProfilePage: React.FC = () => {
   const { user, logout } = useAuth();
   
   const menuItems = [
-    { icon: User, label: 'My Account', path: '/profile/account' },
+    { icon: User, label: 'My Account', path: '/coming-soon' },
     { icon: Leaf, label: 'My Garden', path: '/garden' },
     { icon: CheckSquare, label: 'Tasks', path: '/tasks' },
-    { icon: Bell, label: 'Notifications', path: '/profile/notifications' },
-    { icon: FileText, label: 'Privacy Policy', path: '/profile/privacy' },
-    { icon: HelpCircle, label: 'Help Center', path: '/profile/help' },
-    { icon: Settings, label: 'Settings', path: '/profile/settings' }
+    { icon: Bell, label: 'Notifications', path: '/coming-soon' },
+    { icon: FileText, label: 'Privacy Policy', path: '/coming-soon' },
+    { icon: HelpCircle, label: 'Help Center', path: '/coming-soon' },
+    { icon: Settings, label: 'Settings', path: '/coming-soon' }
   ];
 
   return (

@@ -7,10 +7,9 @@ const { authenticateToken } = require("../auth");
 // 🌱 Add new plant (protected)
 router.post("/", authenticateToken, async (req, res) => {
   try {
-    const { name, species, gardenId, purchaseDate, notes, photoUrl } = req.body;
-
+    const { name, species, description, difficulty, careFrequency, category, image, notes, photoUrl, gardenId } = req.body;
     if (!name || !gardenId) {
-      return res.status(400).json({ message: 'Plant name and garden are required' });
+      return res.status(400).json({ message: name+'Plant name and garden are required' });
     }
     
     // Verify garden belongs to user
@@ -22,11 +21,16 @@ router.post("/", authenticateToken, async (req, res) => {
     const newPlant = new Plant({
       name,
       species,
-      gardenId,
-      purchaseDate,
+      description,
+      difficulty,
+      careFrequency,
+      category,
+      image,
       notes,
       photoUrl,
-      userId: req.user.userId 
+      gardenId,
+      userId: req.user.userId,
+      isLibraryPlant: false
     });
 
     await newPlant.save();
@@ -39,7 +43,7 @@ router.post("/", authenticateToken, async (req, res) => {
 // 🌱 Get all plants for logged-in user
 router.get("/", authenticateToken, async (req, res) => {
   try {
-    const plants = await Plant.find({ userId: req.user.userId }).populate('gardenId', 'name location');
+    const plants = await Plant.find({ userId: req.user.userId, isLibraryPlant: false }).populate('gardenId', 'name location');
     res.json(plants);
   } catch (err) {
     res.status(500).json({ message: "Error fetching plants", error: err.message });
@@ -49,7 +53,7 @@ router.get("/", authenticateToken, async (req, res) => {
 // Get specific plant
 router.get("/:id", authenticateToken, async (req, res) => {
   try {
-    const plant = await Plant.findOne({ _id: req.params.id, userId: req.user.userId }).populate('gardenId', 'name location');
+    const plant = await Plant.findOne({ _id: req.params.id, userId: req.user.userId, isLibraryPlant: false }).populate('gardenId', 'name location');
     if (!plant) return res.status(404).json({ message: 'Plant not found' });
     res.json(plant);
   } catch (err) {
@@ -61,7 +65,7 @@ router.get("/:id", authenticateToken, async (req, res) => {
 router.put("/:id", authenticateToken, async (req, res) => {
   try {
     const updatedPlant = await Plant.findOneAndUpdate(
-      { _id: req.params.id, userId: req.user.userId },
+      { _id: req.params.id, userId: req.user.userId, isLibraryPlant: false },
       req.body,
       { new: true }
     );

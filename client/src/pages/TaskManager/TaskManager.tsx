@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { apiFetch } from '../../utils/api';
 import type { CareTask, Plant, TaskType } from '../../types';
 import { usePlants } from '../../hooks/usePlants';
 import { useNavigate } from 'react-router-dom';
@@ -208,7 +209,28 @@ interface TaskManagerProps {
 export const TaskManager: React.FC<TaskManagerProps> = ({ onBack }) => {
   const navigate = useNavigate();
   const { plants, loading } = usePlants();
-  const [tasks, setTasks] = useState<CareTask[]>(mockTasks);
+  const [tasks, setTasks] = useState<CareTask[]>([]);
+
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  const fetchTasks = async () => {
+    try {
+      const data = await apiFetch('/api/tasks');
+      setTasks(data.map((task: any) => ({
+        id: task._id,
+        plantId: task.plantId?._id || task.plantId,
+        type: task.type,
+        dueDate: new Date(task.date),
+        completed: task.completed,
+        isLate: new Date(task.date) < new Date() && !task.completed,
+        daysLate: new Date(task.date) < new Date() ? Math.floor((Date.now() - new Date(task.date).getTime()) / (1000 * 60 * 60 * 24)) : undefined
+      })));
+    } catch (err) {
+      console.error('Failed to fetch tasks:', err);
+    }
+  };
   const [currentView, setCurrentView] = useState<'tasks' | 'newTask'>('tasks');
   const [selectedTaskType, setSelectedTaskType] = useState<string | null>(null);
   const [selectedPlant, setSelectedPlant] = useState<string | null>(null);
@@ -231,12 +253,17 @@ export const TaskManager: React.FC<TaskManagerProps> = ({ onBack }) => {
     return taskDate.getTime() > today.getTime() && !task.completed;
   });
 
-  const handleCompleteTask = (taskId: string) => {
-    setTasks(prevTasks =>
-      prevTasks.map(task =>
-        task.id === taskId ? { ...task, completed: true } : task
-      )
-    );
+  const handleCompleteTask = async (taskId: string) => {
+    try {
+      await apiFetch(`/api/tasks/${taskId}/complete`, { method: 'PATCH' });
+      setTasks(prevTasks =>
+        prevTasks.map(task =>
+          task.id === taskId ? { ...task, completed: true } : task
+        )
+      );
+    } catch (err) {
+      console.error('Failed to complete task:', err);
+    }
   };
 
   const handleSnoozeTask = (taskId: string) => {
@@ -260,18 +287,26 @@ export const TaskManager: React.FC<TaskManagerProps> = ({ onBack }) => {
     setSelectedPlant(null);
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (selectedTaskType && selectedPlant) {
-      // Create new task
-      const newTask: CareTask = {
-        id: Date.now().toString(),
-        plantId: selectedPlant,
-        type: selectedTaskType as any,
-        dueDate: new Date(Date.now() + 24 * 60 * 60 * 1000), // Due tomorrow
-        completed: false,
-      };
-      setTasks(prevTasks => [...prevTasks, newTask]);
-      setCurrentView('tasks');
+      try {
+        const newTask = await apiFetch('/api/tasks', {
+          method: 'POST',
+          body: JSON.stringify({
+            type: selectedTaskType,
+            plantId: selectedPlant,
+            time: '08:00',
+            date: new Date(Date.now() + 24 * 60 * 60 * 1000),
+            frequency: 'Daily',
+            alarmEnabled: true,
+            notificationEnabled: true
+          })
+        });
+        fetchTasks();
+        setCurrentView('tasks');
+      } catch (err) {
+        console.error('Failed to create task:', err);
+      }
     }
   };
 

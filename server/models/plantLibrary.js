@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const plantSchema = new mongoose.Schema({
+const plantLibrarySchema = new mongoose.Schema({
   name: { type: String, required: true },
   species: { type: String },
   description: { type: String },
@@ -12,6 +12,8 @@ const plantSchema = new mongoose.Schema({
   leafType: { type: String },
   fruitColor: [{ type: String }],
   lifeSpan: { type: String },
+  plantingTime: { type: String },
+  harvestTime: { type: String },
   care: {
     water: {
       drySeason: { type: String },
@@ -28,19 +30,7 @@ const plantSchema = new mongoose.Schema({
     tag: { type: String },
     symptoms: { type: String },
     fix: { type: String }
-  }],
-  isFavorite: { type: Boolean, default: false },
-  dateAdded: { type: Date, default: Date.now },
-  notes: { type: String },
-  photoUrl: { type: String },
-  gardenId: { type: mongoose.Schema.Types.ObjectId, ref: "Garden" },
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  isLibraryPlant: { type: Boolean, default: false },
-  careStatus: {
-    light: { type: String, enum: ['good', 'warning', 'critical'], default: 'good' },
-    water: { type: String, enum: ['good', 'warning', 'critical'], default: 'good' },
-    mood: { type: String, enum: ['happy', 'neutral', 'sad'], default: 'happy' }
-  }
+  }]
 }, { timestamps: true });
 
-module.exports = mongoose.model("Plant", plantSchema);
+module.exports = mongoose.model('PlantLibrary', plantLibrarySchema);

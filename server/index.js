@@ -11,6 +11,7 @@ const homeRoutes = require("./routes/home");
 const plantRoutes = require("./routes/plant");
 const taskRoutes = require("./routes/task");
 const gardenRoutes = require("./routes/garden");
+const plantLibraryRoutes = require("./routes/plantLibrary");
 
 const app = express();
 
@@ -59,9 +60,10 @@ app.use('/api/gardens', (req, res, next) => {
 
 // ===== Feature Routes =====
 app.use("/api/home", authenticateToken, homeRoutes);
-app.use("/api/plant", plantRoutes); 
+app.use("/api/plants", plantRoutes); 
 app.use("/api/tasks", taskRoutes);
 app.use("/api/gardens", gardenRoutes);
+app.use("/api/plant-library", plantLibraryRoutes);
 
 // ===== Error Handling =====
 app.use((err, req, res, next) => {
@@ -96,3 +98,5 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
+
+

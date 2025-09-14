@@ -1,5 +1,6 @@
 // src/pages/AddTaskPage/AddTaskPage.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { apiFetch } from '../../utils/api';
 import { ArrowLeft, Droplets, Scissors, Zap, Flower2, Calendar, Scissors as AlarmIcon } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { useNavigate } from 'react-router-dom';
@@ -26,14 +27,27 @@ const AddTaskPage: React.FC = () => {
     { id: 'repot', label: 'Repot', icon: Flower2, color: 'text-green-500' }
   ];
 
-  const plants = [
-    { id: 'tomato1', name: 'Tomato', imageUrl: '/imagetomato.jpg' },
-    { id: 'tomato2', name: 'Tomato', imageUrl: '/imagetomato.jpg'},
-    { id: 'tomato3', name: 'Tomato', imageUrl: '/imagetomato.jpg'},
-    { id: 'tomato4', name: 'Tomato', imageUrl: '/imagetomato.jpg' },
-    { id: 'tomato5', name: 'Tomato', imageUrl: '/imagetomato.jpg' },
-    { id: 'tomato6', name: 'Tomato', imageUrl: '/imagetomato.jpg' }
-  ];
+  const [plants, setPlants] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchUserPlants();
+  }, []);
+
+  const fetchUserPlants = async () => {
+    try {
+      const data = await apiFetch('/api/plants');
+      setPlants(data.map((plant: any) => ({
+        id: plant._id,
+        name: plant.name,
+        imageUrl: plant.photoUrl || plant.image || '/imagetomato.jpg'
+      })));
+    } catch (err) {
+      console.error('Failed to fetch user plants:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const quickTimeOptions = [
     { label: 'Morning (8 am)', time: '08:00' },
@@ -65,17 +79,24 @@ const AddTaskPage: React.FC = () => {
     }
   };
 
-  const handleSave = () => {
-    // Here you would save the task to your backend
-    console.log('Task saved:', {
-      taskType: selectedTaskType,
-      plant: selectedPlant,
-      time: selectedTime,
-      date: selectedDate,
-      frequency: selectedFrequency,
-      alarmEnabled
-    });
-    setShowConfirmation(true);
+  const handleSave = async () => {
+    try {
+      await apiFetch('/api/tasks', {
+        method: 'POST',
+        body: JSON.stringify({
+          type: selectedTaskType,
+          plantId: selectedPlant,
+          time: selectedTime,
+          date: selectedDate,
+          frequency: selectedFrequency,
+          alarmEnabled,
+          notificationEnabled: true
+        })
+      });
+      setShowConfirmation(true);
+    } catch (err) {
+      console.error('Failed to save task:', err);
+    }
   };
 
   const handleConfirmationOk = () => {
@@ -200,8 +221,24 @@ const AddTaskPage: React.FC = () => {
             {/* Which plant? Section */}
             <div>
               <h2 className="mb-6 text-xl font-semibold text-green-800">Which plant?</h2>
-              <div className="grid grid-cols-3 gap-4">
-                {plants.map((plant) => (
+              {loading ? (
+                <div className="text-center py-8">
+                  <div className="w-8 h-8 border-4 border-green-200 border-t-green-600 rounded-full animate-spin mx-auto mb-4"></div>
+                  <p>Loading your plants...</p>
+                </div>
+              ) : plants.length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-gray-600 mb-4">No plants found. Add plants to your garden first.</p>
+                  <button 
+                    onClick={() => navigate('/plants')}
+                    className="text-green-600 underline"
+                  >
+                    Browse Plant Library
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-3 gap-4">
+                  {plants.map((plant) => (
                   <button
                     key={plant.id}
                     onClick={() => setSelectedPlant(plant.id)}
@@ -224,8 +261,9 @@ const AddTaskPage: React.FC = () => {
                     </div>
                     <span className="text-sm font-medium text-gray-800">{plant.name}</span>
                   </button>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           </>
         )}
