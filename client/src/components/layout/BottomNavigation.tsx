@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Book, PenTool, User, Sprout } from 'lucide-react';
+import { Home, Book, CheckSquare, User, Sprout } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './BottomNavigation.css';
 
@@ -11,7 +11,7 @@ const BottomNavigation: React.FC = () => {
     { path: '/garden', icon: Sprout, label: 'Garden' },
     { path: '/plants', icon: Book, label: 'Plants' },
     { path: '/', icon: Home, label: 'Home' },
-    { path: '/journal', icon: PenTool, label: 'Journal' },
+    { path: '/tasks', icon: CheckSquare, label: 'Tasks' },
     { path: '/profile', icon: User, label: 'Profile' },
   ];
 

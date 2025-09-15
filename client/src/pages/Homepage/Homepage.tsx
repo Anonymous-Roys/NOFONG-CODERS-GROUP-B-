@@ -1,6 +1,7 @@
 // src/pages/HomePage/HomePage.tsx
 import React, { useState, useEffect } from 'react';
 import { apiFetch } from '../../utils/api';
+import AddPlantModal from '../../components/ui/AddPlantModal';
 import { 
   Search, 
   Plus, 
@@ -48,6 +49,9 @@ const HomePage: React.FC = () => {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [selectedPlant, setSelectedPlant] = useState<PopularPlant | null>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [todayTasksCompleted, setTodayTasksCompleted] = useState(0);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [selectedPlantForAdd, setSelectedPlantForAdd] = useState<PopularPlant | null>(null);
 
   useEffect(() => {
     fetchTasks();
@@ -69,8 +73,6 @@ const HomePage: React.FC = () => {
       console.error('Failed to fetch tasks:', err);
     }
   };
-
-  const [todayTasksCompleted, setTodayTasksCompleted] = useState(0);
   const totalTodayTasks = tasks.length;
 
   const [popularPlants, setPopularPlants] = useState<PopularPlant[]>([]);
@@ -105,9 +107,15 @@ const HomePage: React.FC = () => {
     }
   };
 
-  const handleAddPlant = (plantId: string) => {
-    console.log('Adding plant:', plantId);
-    // Navigate to add plant page or show modal
+  const handleAddPlant = (plant: PopularPlant) => {
+    setSelectedPlantForAdd(plant);
+    setShowAddModal(true);
+  };
+
+  const handleAddSuccess = () => {
+    console.log('Plant added successfully!');
+    setShowAddModal(false);
+    setSelectedPlantForAdd(null);
   };
 
   const handleSeeMorePlants = () => {
@@ -406,7 +414,7 @@ const HomePage: React.FC = () => {
                     <p className="text-gray-600 text-sm line-clamp-2">{plant.description}</p>
                   </div>
                   <button 
-                    onClick={() => handleAddPlant(plant.id)}
+                    onClick={() => handleAddPlant(plant)}
                     className="w-10 h-10 bg-green-600 hover:bg-green-700 text-white rounded-full flex items-center justify-center transition-colors flex-shrink-0"
                     aria-label={`Add ${plant.name} to garden`}
                   >
@@ -527,7 +535,7 @@ const HomePage: React.FC = () => {
                   variant="primary" 
                   className="flex-1"
                   onClick={() => {
-                    handleAddPlant(selectedPlant.id);
+                    handleAddPlant(selectedPlant);
                     setSelectedPlant(null);
                   }}
                 >
@@ -537,6 +545,20 @@ const HomePage: React.FC = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Add Plant Modal */}
+      {showAddModal && selectedPlantForAdd && (
+        <AddPlantModal
+          isOpen={showAddModal}
+          onClose={() => {
+            setShowAddModal(false);
+            setSelectedPlantForAdd(null);
+          }}
+          plantName={selectedPlantForAdd.name}
+          plantSpecies={selectedPlantForAdd.name}
+          onSuccess={handleAddSuccess}
+        />
       )}
     </div>
   );

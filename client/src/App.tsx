@@ -91,11 +91,10 @@ function App() {
                   <Route path="garden/:id" element={<GardenDetailPage />} />
                   <Route path="plants" element={<PlantsPage />} />
                   <Route path="plants/:slug" element={<PlantDetailPage />} />
-                  <Route path="journal" element={<JournalPage />} />
+                  <Route path="tasks" element={<TaskManager />} />
                   <Route path="profile" element={<ProfilePage />} />
                   <Route path="plants/add" element={<AddPlantPage />} />
                   <Route path="tasks/add" element={<AddTaskPage />} />
-                  <Route path="tasks" element={<TaskManager />} />
                   <Route path="coming-soon" element={<ComingSoon />} />
                 </Route>
               </Route>
