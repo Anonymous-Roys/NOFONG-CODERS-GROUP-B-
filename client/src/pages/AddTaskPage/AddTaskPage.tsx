@@ -3,13 +3,15 @@ import React, { useState, useEffect } from 'react';
 import { apiFetch } from '../../utils/api';
 import { ArrowLeft, Droplets, Scissors, Zap, Flower2, Calendar, AlarmClock } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import TimePicker from '../../components/TimePicker';
 import DatePicker from '../../components/DatePicker';
 import TaskConfirmation from '../../components/TaskConfirmation';
 
 const AddTaskPage: React.FC = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
+  const isEditing = Boolean(id);
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedTaskType, setSelectedTaskType] = useState<string>('');
   const [selectedPlant, setSelectedPlant] = useState<string>('');
@@ -19,6 +21,7 @@ const AddTaskPage: React.FC = () => {
   const [alarmEnabled, setAlarmEnabled] = useState(true);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const taskTypes = [
     { id: 'water', label: 'Water', icon: Droplets, color: 'text-blue-500' },
@@ -32,7 +35,24 @@ const AddTaskPage: React.FC = () => {
 
   useEffect(() => {
     fetchUserPlants();
-  }, []);
+    if (isEditing && id) {
+      fetchTaskData(id);
+    }
+  }, [isEditing, id]);
+
+  const fetchTaskData = async (taskId: string) => {
+    try {
+      const task = await apiFetch(`/api/tasks/${taskId}`);
+      setSelectedTaskType(task.type);
+      setSelectedPlant(task.plantId._id || task.plantId);
+      setSelectedTime(task.time || '08:00');
+      setSelectedDate(new Date(task.date));
+      setSelectedFrequency(task.frequency || 'Daily');
+      setAlarmEnabled(task.alarmEnabled ?? true);
+    } catch (err) {
+      console.error('Failed to fetch task data:', err);
+    }
+  };
 
   const fetchUserPlants = async () => {
     try {
@@ -86,8 +106,11 @@ const AddTaskPage: React.FC = () => {
       const [hours, minutes] = selectedTime.split(':').map(Number);
       taskDateTime.setHours(hours, minutes, 0, 0);
 
-      await apiFetch('/api/tasks', {
-        method: 'POST',
+      const url = isEditing ? `/api/tasks/${id}` : '/api/tasks';
+      const method = isEditing ? 'PUT' : 'POST';
+
+      await apiFetch(url, {
+        method,
         body: JSON.stringify({
           type: selectedTaskType,
           plantId: selectedPlant,
@@ -98,7 +121,11 @@ const AddTaskPage: React.FC = () => {
           notificationEnabled: true
         })
       });
-      setShowConfirmation(true);
+      
+      setSuccessMessage(isEditing ? 'Task updated successfully!' : 'Task created successfully!');
+      setTimeout(() => {
+        navigate('/tasks');
+      }, 2000);
     } catch (err) {
       console.error('Failed to save task:', err);
     }
@@ -126,10 +153,10 @@ const AddTaskPage: React.FC = () => {
 
   const getStepTitle = () => {
     switch (currentStep) {
-      case 1: return 'Add New Task';
+      case 1: return isEditing ? 'Edit Task' : 'Add New Task';
       case 2: return 'When should I remind you?';
       case 3: return 'Set Reminder';
-      default: return 'Add New Task';
+      default: return isEditing ? 'Edit Task' : 'Add New Task';
     }
   };
 
@@ -398,6 +425,21 @@ const AddTaskPage: React.FC = () => {
           ))}
         </div>
       </div>
+
+      {/* Success Message */}
+      {successMessage && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl p-8 mx-4 max-w-sm w-full text-center">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold mb-2">{successMessage}</h3>
+            <p className="text-gray-600">Redirecting to tasks...</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -15,6 +15,7 @@ export const TaskManager: React.FC<TaskManagerProps> = () => {
   const [deletedTask, setDeletedTask] = useState<any | null>(null);
   const [showUndo, setShowUndo] = useState(false);
   const [notificationPermission, setNotificationPermission] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
     fetchTasks();
@@ -159,7 +160,7 @@ export const TaskManager: React.FC<TaskManagerProps> = () => {
                   </svg>
                 </button>
                 <button 
-                  onClick={() => navigate('/tasks/add')}
+                  onClick={() => navigate(`/tasks/edit/${task.id}`)}
                   className="p-2 text-green-600"
                   title="Edit task"
                 >
@@ -219,7 +220,7 @@ export const TaskManager: React.FC<TaskManagerProps> = () => {
       {/* Undo Toast */}
       {showUndo && (
         <div className="fixed bottom-32 left-4 right-4 bg-gray-800 text-white p-4 rounded-2xl flex items-center justify-between z-50">
-          <span>Task deleted</span>
+          <span>Task deleted successfully</span>
           <button
             onClick={undoDelete}
             className="bg-green-600 px-4 py-2 rounded-xl font-medium"

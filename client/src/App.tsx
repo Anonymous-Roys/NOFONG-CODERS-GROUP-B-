@@ -92,6 +92,7 @@ function App() {
                   <Route path="tasks" element={<TaskManager />} />
                   <Route path="profile" element={<ProfilePage />} />
                   <Route path="tasks/add" element={<AddTaskPage />} />
+                  <Route path="tasks/edit/:id" element={<AddTaskPage />} />
                   <Route path="coming-soon" element={<ComingSoon />} />
                 </Route>
               </Route>

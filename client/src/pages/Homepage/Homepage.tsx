@@ -18,7 +18,7 @@ import {
   ClipboardCheck,
   X,
   Settings,
-  HelpCircle
+  HelpCirclenavi
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
@@ -247,11 +247,11 @@ const HomePage: React.FC = () => {
                 <span className="text-gray-800">Plant Library</span>
               </button>
               <button 
-                onClick={() => { navigate('/journal'); setIsMenuOpen(false); }}
+                onClick={() => { navigate('/tasks'); setIsMenuOpen(false); }}
                 className="flex items-center w-full gap-3 p-3 text-left rounded-lg hover:bg-gray-50"
               >
                 <PenTool className="w-5 h-5 text-green-600" />
-                <span className="text-gray-800">Journal</span>
+                <span className="text-gray-800">Task</span>
               </button>
               <button 
                 onClick={() => { navigate('/profile'); setIsMenuOpen(false); }}
