@@ -30,11 +30,7 @@ export const scheduleTaskNotification = (task: any) => {
         icon: '/logo.png',
         badge: '/logo.png',
         tag: task.id,
-        requireInteraction: true,
-        actions: [
-          { action: 'complete', title: 'Mark Complete' },
-          { action: 'snooze', title: 'Snooze 1hr' }
-        ]
+        requireInteraction: true
       });
 
       // Play notification sound

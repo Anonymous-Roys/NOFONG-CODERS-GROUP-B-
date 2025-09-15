@@ -7,7 +7,7 @@ interface TaskManagerProps {
   onBack?: () => void;
 }
 
-export const TaskManager: React.FC<TaskManagerProps> = ({ onBack }) => {
+export const TaskManager: React.FC<TaskManagerProps> = () => {
   const navigate = useNavigate();
   const [tasks, setTasks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -44,7 +44,7 @@ export const TaskManager: React.FC<TaskManagerProps> = ({ onBack }) => {
       setTasks(mappedTasks);
       
       // Schedule notifications for upcoming tasks
-      mappedTasks.forEach(task => {
+      mappedTasks.forEach((task: any) => {
         if (!task.completed && notificationPermission) {
           scheduleTaskNotification(task);
         }

@@ -32,6 +32,7 @@ interface Task {
   isCompleted: boolean;
   imageUrl: string;
   description: string;
+  dueDate: Date;
 }
 
 interface PopularPlant {
@@ -75,8 +76,8 @@ const HomePage: React.FC = () => {
       
       // Show only upcoming tasks (max 3) on homepage
       const upcomingTasks = allTasks
-        .filter(task => !task.isCompleted && task.dueDate >= new Date())
-        .sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime())
+        .filter((task: any) => !task.isCompleted && task.dueDate >= new Date())
+        .sort((a: any, b: any) => a.dueDate.getTime() - b.dueDate.getTime())
         .slice(0, 3);
       
       setTasks(upcomingTasks);
