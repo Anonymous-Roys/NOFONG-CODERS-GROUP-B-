@@ -5,7 +5,6 @@ import AppLayout from './components/layout/AppLayout';
 import GardenPage from './pages/GardenPage/GardenPage';
 import GardenDetailPage from './pages/GardenDetailPage/GardenDetailPage';
 import PlantsPage from './pages/PlantsPage/PlantsPage';
-import JournalPage from './pages/JournalPage/JournalPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import AddPlantPage from './pages/AddPlantPage/AddPlantPage';
 import AddTaskPage from './pages/AddTaskPage/AddTaskPage';
@@ -45,8 +44,8 @@ function App() {
 
   if (shouldOnboard === null) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-green-200 border-t-green-600 rounded-full animate-spin"></div>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="w-8 h-8 border-4 border-green-200 rounded-full border-t-green-600 animate-spin"></div>
       </div>
     );
   }
