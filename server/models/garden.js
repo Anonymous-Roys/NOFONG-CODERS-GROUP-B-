@@ -5,7 +5,8 @@ const gardenSchema = new mongoose.Schema({
   location: { 
     type: String, 
     required: true,
-    enum: ['Living Room', 'Bedroom', 'Balcony', 'Bathroom', 'Kitchen', 'Office', 'Outdoor', 'Other']
+    enum: ['Living Room', 'Bedroom', 'Balcony', 'Bathroom', 'Kitchen', 'Office', 'Outdoor', 'Indoor', 'Patio', 'Greenhouse', 'Windowsill', 'Other']
+
   },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }
 }, { timestamps: true });
