@@ -81,13 +81,18 @@ const AddTaskPage: React.FC = () => {
 
   const handleSave = async () => {
     try {
+      // Combine selected date and time
+      const taskDateTime = new Date(selectedDate);
+      const [hours, minutes] = selectedTime.split(':').map(Number);
+      taskDateTime.setHours(hours, minutes, 0, 0);
+
       await apiFetch('/api/tasks', {
         method: 'POST',
         body: JSON.stringify({
           type: selectedTaskType,
           plantId: selectedPlant,
           time: selectedTime,
-          date: selectedDate,
+          date: taskDateTime.toISOString(),
           frequency: selectedFrequency,
           alarmEnabled,
           notificationEnabled: true

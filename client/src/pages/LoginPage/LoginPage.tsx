@@ -47,7 +47,7 @@ const LoginPage: React.FC = () => {
               <select 
                 value={countryCode}
                 onChange={(e) => setCountryCode(e.target.value)}
-                className="px-3 py-0 border rounded-full" 
+                className="py-0 border rounded-full px-7" 
                 style={{borderColor:'var(--color-border-gray)'}}
               >
                 <option value="+233">🇬🇭 +233</option>

@@ -109,7 +109,6 @@ const CreateGardenModal: React.FC<CreateGardenModalProps> = ({
                   <option value="Bathroom">Bathroom</option>
                   <option value="Balcony">Balcony</option>
                   <option value="Patio">Patio</option>
-                  <option value="Garden">Garden</option>
                   <option value="Office">Office</option>
                   <option value="Greenhouse">Greenhouse</option>
                   <option value="Windowsill">Windowsill</option>
