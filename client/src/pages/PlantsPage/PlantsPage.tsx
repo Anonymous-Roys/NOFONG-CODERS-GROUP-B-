@@ -21,6 +21,7 @@ const PlantsPage: React.FC = () => {
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [plants, setPlants] = useState<Plant[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingDetail, setLoadingDetail] = useState(false);
 
   useEffect(() => {
     fetchPlants();
@@ -36,7 +37,7 @@ const PlantsPage: React.FC = () => {
         difficulty: plant.difficulty,
         careFrequency: plant.careFrequency,
         category: plant.category,
-        image: plant.image || '/1.png',
+        image: plant.image || plant.imageUrl || '/1.png',
         isFavorite: false
       })));
     } catch (err) {
@@ -144,16 +145,21 @@ const PlantsPage: React.FC = () => {
           {filteredPlants.map((plant) => (
             <div
               key={plant.id}
-              onClick={() => navigate(`/plants/${plant.id}`)}
+              onClick={() => {
+                setLoadingDetail(true);
+                setTimeout(() => {
+                  navigate(`/plants/${plant.id}`);
+                }, 300);
+              }}
               className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer"
             >
               <div className="flex items-center space-x-4">
                 {/* Plant Image */}
-                <div className="w-16 h-16 bg-pink-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+                <div className="w-16 h-16 rounded-2xl overflow-hidden flex-shrink-0">
                   <img 
                     src={plant.image} 
                     alt={plant.name}
-                    className="w-10 h-10 object-contain"
+                    className="w-full h-full object-cover"
                   />
                 </div>
 
@@ -217,6 +223,16 @@ const PlantsPage: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Loading Overlay */}
+      {loadingDetail && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl p-8 text-center">
+            <div className="w-8 h-8 border-4 border-green-200 border-t-green-600 rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading plant details...</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

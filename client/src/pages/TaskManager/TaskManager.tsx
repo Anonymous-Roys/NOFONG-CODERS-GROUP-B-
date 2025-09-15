@@ -1,173 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { apiFetch } from '../../utils/api';
-import type { CareTask, Plant, TaskType } from '../../types';
-import { usePlants } from '../../hooks/usePlants';
 import { useNavigate } from 'react-router-dom';
-
-
-const taskTypes: TaskType[] = [
-  { id: 'water', label: 'Water', icon: '💧' },
-  { id: 'fertilize', label: 'Fertilize', icon: '🌱' },
-  { id: 'prune', label: 'Prune', icon: '✂️' },
-  { id: 'repot', label: 'Repot', icon: '🌿' },
-];
-
-interface TaskCardProps {
-  task: CareTask;
-  plant: Plant;
-  onComplete: (taskId: string) => void;
-  onSnooze: (taskId: string) => void;
-}
-
-const TaskCard: React.FC<TaskCardProps> = ({ task, plant, onComplete, onSnooze }) => {
-  const taskType = taskTypes.find(t => t.id === task.type);
-  const timeString = task.dueDate.toLocaleTimeString('en-US', { 
-    hour: 'numeric', 
-    minute: '2-digit',
-    hour12: true 
-  });
-
-  return (
-    <div className="p-4 mb-4 border border-green-100 bg-green-50 rounded-xl">
-      <div className="flex items-start space-x-4">
-        {/* Plant Image */}
-        <div className="flex items-center justify-center flex-shrink-0 w-16 h-16 bg-green-200 rounded-full">
-          {plant.imageUrl ? (
-            <img 
-              src={plant.imageUrl} 
-              alt={plant.name}
-              className="object-cover w-full h-full rounded-full"
-            />
-          ) : (
-            <span className="text-2xl">🌿</span>
-          )}
-        </div>
-
-        {/* Task Info */}
-        <div className="flex-1">
-          <div className="flex items-start justify-between">
-            <div>
-              <h3 className="text-lg font-bold text-gray-800">
-                {plant.name} - {taskType?.label}
-              </h3>
-              <p className="text-gray-600">Time: {timeString}</p>
-            </div>
-            <button className="text-green-600 hover:text-green-700">
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-              </svg>
-            </button>
-          </div>
-
-          {/* Late Badge */}
-          {task.isLate && task.daysLate && (
-            <div className="mt-2">
-              <span className="px-2 py-1 text-sm font-medium text-orange-800 bg-orange-100 rounded-full">
-                {task.daysLate === 1 ? 'One day late' : `${task.daysLate} days late`}
-              </span>
-            </div>
-          )}
-
-          {/* Action Buttons */}
-          <div className="flex items-center mt-4 space-x-4">
-            <button 
-              onClick={() => onComplete(task.id)}
-              className="flex items-center space-x-2 text-green-600 hover:text-green-700"
-            >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
-              <span className="font-medium">Done</span>
-            </button>
-            
-            <div className="w-px h-4 bg-gray-300"></div>
-            
-            <button 
-              onClick={() => onSnooze(task.id)}
-              className="flex items-center space-x-2 text-orange-600 hover:text-orange-700"
-            >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
-              </svg>
-              <span className="font-medium">Snooze</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-interface TaskTypeSelectorProps {
-  selectedType: string | null;
-  onSelectType: (type: string) => void;
-}
-
-const TaskTypeSelector: React.FC<TaskTypeSelectorProps> = ({ selectedType, onSelectType }) => {
-  return (
-    <div className="space-y-4">
-      <h2 className="text-lg font-semibold text-green-600">What do you want to do?</h2>
-      <div className="grid grid-cols-2 gap-4">
-        {taskTypes.map((type) => (
-          <button
-            key={type.id}
-            onClick={() => onSelectType(type.id)}
-            className={`p-4 rounded-lg border-2 transition-all ${
-              selectedType === type.id
-                ? 'border-blue-400 bg-blue-50'
-                : 'border-gray-200 bg-white hover:border-gray-300'
-            }`}
-          >
-            <div className="text-center">
-              <div className="mb-2 text-3xl">{type.icon}</div>
-              <div className="font-medium text-gray-800">{type.label}</div>
-            </div>
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-interface PlantSelectorProps {
-  plants: Plant[];
-  selectedPlant: string | null;
-  onSelectPlant: (plantId: string) => void;
-}
-
-const PlantSelector: React.FC<PlantSelectorProps> = ({ plants, selectedPlant, onSelectPlant }) => {
-  return (
-    <div className="space-y-4">
-      <h2 className="text-lg font-semibold text-green-600">Which plant?</h2>
-      <div className="grid grid-cols-3 gap-4">
-        {plants.map((plant) => (
-          <button
-            key={plant.id}
-            onClick={() => onSelectPlant(plant.id)}
-            className={`flex flex-col items-center space-y-2 p-3 rounded-lg transition-all ${
-              selectedPlant === plant.id
-                ? 'bg-green-100 border-2 border-green-400'
-                : 'bg-white border-2 border-gray-200 hover:border-gray-300'
-            }`}
-          >
-            <div className="flex items-center justify-center w-16 h-16 bg-green-200 rounded-full">
-              {plant.imageUrl ? (
-                <img 
-                  src={plant.imageUrl} 
-                  alt={plant.name}
-                  className="object-cover w-full h-full rounded-full"
-                />
-              ) : (
-                <span className="text-2xl">🌿</span>
-              )}
-            </div>
-            <span className="text-sm font-medium text-gray-800">{plant.name}</span>
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-};
+import { apiFetch } from '../../utils/api';
+import { requestNotificationPermission, scheduleTaskNotification, registerServiceWorker } from '../../utils/notifications';
 
 interface TaskManagerProps {
   onBack?: () => void;
@@ -175,247 +9,225 @@ interface TaskManagerProps {
 
 export const TaskManager: React.FC<TaskManagerProps> = ({ onBack }) => {
   const navigate = useNavigate();
-  const { plants, loading } = usePlants();
-  const [tasks, setTasks] = useState<CareTask[]>([]);
+  const [tasks, setTasks] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
+  const [deletedTask, setDeletedTask] = useState<any | null>(null);
+  const [showUndo, setShowUndo] = useState(false);
+  const [notificationPermission, setNotificationPermission] = useState(false);
 
   useEffect(() => {
     fetchTasks();
+    initializeNotifications();
   }, []);
+
+  const initializeNotifications = async () => {
+    await registerServiceWorker();
+    const hasPermission = await requestNotificationPermission();
+    setNotificationPermission(hasPermission);
+  };
 
   const fetchTasks = async () => {
     try {
       const data = await apiFetch('/api/tasks');
-      setTasks(data.map((task: any) => ({
+      const mappedTasks = data.map((task: any) => ({
         id: task._id,
-        plantId: task.plantId?._id || task.plantId,
+        plantName: task.plantId?.name || 'Unknown Plant',
         type: task.type,
-        dueDate: new Date(task.date),
+        time: new Date(task.date).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }),
+        frequency: task.frequency || 'Once',
+        imageUrl: task.plantId?.photoUrl || '/1.png',
         completed: task.completed,
-        isLate: new Date(task.date) < new Date() && !task.completed,
-        daysLate: new Date(task.date) < new Date() ? Math.floor((Date.now() - new Date(task.date).getTime()) / (1000 * 60 * 60 * 24)) : undefined
-      })));
+        date: task.date
+      }));
+      
+      setTasks(mappedTasks);
+      
+      // Schedule notifications for upcoming tasks
+      mappedTasks.forEach(task => {
+        if (!task.completed && notificationPermission) {
+          scheduleTaskNotification(task);
+        }
+      });
     } catch (err) {
       console.error('Failed to fetch tasks:', err);
+    } finally {
+      setLoading(false);
     }
   };
-  const [currentView, setCurrentView] = useState<'tasks' | 'newTask'>('tasks');
-  const [selectedTaskType, setSelectedTaskType] = useState<string | null>(null);
-  const [selectedPlant, setSelectedPlant] = useState<string | null>(null);
 
-  // Separate tasks into today and upcoming
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-
-  const todayTasks = tasks.filter(task => {
-    const taskDate = new Date(task.dueDate);
-    taskDate.setHours(0, 0, 0, 0);
-    return taskDate.getTime() === today.getTime() && !task.completed;
-  });
-
-  const upcomingTasks = tasks.filter(task => {
-    const taskDate = new Date(task.dueDate);
-    taskDate.setHours(0, 0, 0, 0);
-    return taskDate.getTime() > today.getTime() && !task.completed;
-  });
-
-  const handleCompleteTask = async (taskId: string) => {
+  const confirmDelete = async (taskId: string) => {
     try {
-      await apiFetch(`/api/tasks/${taskId}/complete`, { method: 'PATCH' });
-      setTasks(prevTasks =>
-        prevTasks.map(task =>
-          task.id === taskId ? { ...task, completed: true } : task
-        )
-      );
+      const taskToDelete = tasks.find(task => task.id === taskId);
+      await apiFetch(`/api/tasks/${taskId}`, { method: 'DELETE' });
+      setTasks(prev => prev.filter(task => task.id !== taskId));
+      setDeletedTask(taskToDelete);
+      setShowDeleteConfirm(null);
+      setShowUndo(true);
+      setTimeout(() => setShowUndo(false), 5000);
     } catch (err) {
-      console.error('Failed to complete task:', err);
+      console.error('Failed to delete task:', err);
     }
   };
 
-  const handleSnoozeTask = (taskId: string) => {
-    setTasks(prevTasks =>
-      prevTasks.map(task =>
-        task.id === taskId 
-          ? { 
-              ...task, 
-              dueDate: new Date(Date.now() + 24 * 60 * 60 * 1000), // Snooze for 1 day
-              isLate: false,
-              daysLate: undefined
-            } 
-          : task
-      )
-    );
-  };
-
-  const handleAddNewTask = () => {
-    setCurrentView('newTask');
-    setSelectedTaskType(null);
-    setSelectedPlant(null);
-  };
-
-  const handleNext = async () => {
-    if (selectedTaskType && selectedPlant) {
+  const undoDelete = async () => {
+    if (deletedTask) {
       try {
-        
+        await apiFetch('/api/tasks', {
+          method: 'POST',
+          body: JSON.stringify({
+            type: deletedTask.type,
+            plantId: deletedTask.plantId,
+            time: deletedTask.time,
+            date: new Date(),
+            frequency: deletedTask.frequency
+          })
+        });
         fetchTasks();
-        setCurrentView('tasks');
+        setShowUndo(false);
+        setDeletedTask(null);
       } catch (err) {
-        console.error('Failed to create task:', err);
+        console.error('Failed to restore task:', err);
       }
-    }
-  };
-
-  const handleBack = () => {
-    if (onBack) {
-      onBack();
-    } else {
-      setCurrentView('tasks');
     }
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
-        <div className="text-center">
-          <div className="w-12 h-12 mx-auto mb-4 border-b-2 border-green-600 rounded-full animate-spin"></div>
-          <p className="text-gray-600">Loading tasks...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (currentView === 'newTask') {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        {/* Header */}
-        <div className="bg-white shadow-sm">
-          <div className="flex items-center justify-between p-4">
-            <button onClick={handleBack} className="text-gray-600 hover:text-gray-800">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-            <h1 className="text-xl font-semibold text-gray-800">New task form</h1>
-            <div className="w-6"></div>
-          </div>
-        </div>
-
-        {/* Content */}
-        <div className="p-6 space-y-8">
-          <TaskTypeSelector 
-            selectedType={selectedTaskType}
-            onSelectType={setSelectedTaskType}
-          />
-          
-          <PlantSelector 
-            plants={plants}
-            selectedPlant={selectedPlant}
-            onSelectPlant={setSelectedPlant}
-          />
-        </div>
-
-        {/* Footer */}
-        <div className="fixed bottom-0 left-0 right-0 p-6 bg-white border-t border-gray-200">
-          <button
-            onClick={handleNext}
-            disabled={!selectedTaskType || !selectedPlant}
-            className="w-full py-4 text-lg font-semibold text-white bg-green-600 rounded-lg disabled:bg-gray-300 disabled:cursor-not-allowed"
-          >
-            Next
-          </button>
-          
-          {/* Pagination dots */}
-          <div className="flex justify-center mt-4 space-x-2">
-            <div className="w-2 h-2 bg-green-600 rounded-full"></div>
-            <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
-            <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
-          </div>
-        </div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pb-32">
       {/* Header */}
-      <div className="bg-white shadow-sm">
-        <div className="flex items-center justify-between p-4">
-          <button 
-            onClick={onBack || (() => navigate(-1))}
-            className="text-gray-600 hover:text-gray-800"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          <h1 className="text-xl font-semibold text-green-600">Tasks</h1>
-          <div className="w-6"></div>
-        </div>
-        <div className="mx-4 border-b-2 border-blue-500"></div>
+      <div className="bg-white px-5 py-4 flex items-center justify-between">
+        <button className="p-2">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <h1 className="text-xl font-semibold text-green-600">Task Manager</h1>
+        <button 
+          onClick={async () => {
+            const permission = await requestNotificationPermission();
+            setNotificationPermission(permission);
+          }}
+          className="p-2"
+          title="Enable notifications"
+        >
+          <svg className="w-6 h-6" fill={notificationPermission ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM9 12l2 2 4-4" />
+          </svg>
+        </button>
       </div>
 
-      {/* Banner */}
-      <div className="p-4 mx-4 mt-4 bg-green-100 rounded-lg">
-        <p className="font-medium text-center text-gray-700">Manage all your tasks</p>
-      </div>
-
-      {/* Content */}
-      <div className="p-4">
-        {/* Today Section */}
-        <div className="mb-8">
-          <h2 className="mb-4 text-xl font-bold text-green-600">Today</h2>
-          {todayTasks.length === 0 ? (
-            <p className="py-8 text-center text-gray-500">No tasks for today</p>
-          ) : (
-            todayTasks.map(task => {
-              const plant = plants.find(p => p.id === task.plantId);
-              if (!plant) return null;
-              return (
-                <TaskCard
-                  key={task.id}
-                  task={task}
-                  plant={plant}
-                  onComplete={handleCompleteTask}
-                  onSnooze={handleSnoozeTask}
-                />
-              );
-            })
-          )}
-        </div>
-
-        {/* Upcoming Section */}
-        <div className="mb-20">
-          <h2 className="mb-4 text-xl font-bold text-green-600">Upcoming</h2>
-          {upcomingTasks.length === 0 ? (
-            <p className="py-8 text-center text-gray-500">No upcoming tasks</p>
-          ) : (
-            upcomingTasks.map(task => {
-              const plant = plants.find(p => p.id === task.plantId);
-              if (!plant) return null;
-              return (
-                <TaskCard
-                  key={task.id}
-                  task={task}
-                  plant={plant}
-                  onComplete={handleCompleteTask}
-                  onSnooze={handleSnoozeTask}
-                />
-              );
-            })
-          )}
-        </div>
+      {/* Task List */}
+      <div className="px-5 py-4 space-y-4">
+        {tasks.map((task) => (
+          <div key={task.id} className="bg-white rounded-2xl p-4 shadow-sm">
+            <div className="flex items-center gap-4">
+              <img 
+                src={task.imageUrl} 
+                alt={task.plantName}
+                className="w-16 h-16 rounded-full object-cover"
+              />
+              <div className="flex-1">
+                <h3 className="font-semibold text-gray-800">
+                  {task.plantName} - {task.type}
+                </h3>
+                <p className="text-gray-600 text-sm">
+                  {task.time} - {task.frequency}
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <button 
+                  onClick={() => {
+                    const text = `${task.plantName} needs ${task.type} at ${task.time}`;
+                    if ('speechSynthesis' in window) {
+                      const utterance = new SpeechSynthesisUtterance(text);
+                      speechSynthesis.speak(utterance);
+                    }
+                  }}
+                  className="p-2 text-blue-600"
+                  title="Read task aloud"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5 7h4l5-5v20l-5-5H5a2 2 0 01-2-2V9a2 2 0 012-2z" />
+                  </svg>
+                </button>
+                <button 
+                  onClick={() => navigate('/tasks/add')}
+                  className="p-2 text-green-600"
+                  title="Edit task"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                </button>
+                <button 
+                  onClick={() => setShowDeleteConfirm(task.id)}
+                  className="p-2 text-red-500"
+                  title="Delete task"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* Add New Task Button */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200">
+      <div className="fixed bottom-24 left-4 right-4">
         <button
-          onClick={handleAddNewTask}
-          className="w-full py-4 text-lg font-semibold text-white transition-colors bg-green-600 rounded-lg hover:bg-green-700"
+          onClick={() => navigate('/tasks/add')}
+          className="w-full bg-green-600 text-white py-4 rounded-2xl font-semibold text-lg"
         >
           Add New Task
         </button>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl p-6 mx-4 max-w-sm w-full">
+            <h3 className="text-lg font-semibold mb-4">Delete Task?</h3>
+            <p className="text-gray-600 mb-6">Are you sure you want to delete this task? This action cannot be undone.</p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowDeleteConfirm(null)}
+                className="flex-1 py-3 px-4 bg-gray-200 text-gray-800 rounded-xl font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => confirmDelete(showDeleteConfirm)}
+                className="flex-1 py-3 px-4 bg-red-500 text-white rounded-xl font-medium"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Undo Toast */}
+      {showUndo && (
+        <div className="fixed bottom-32 left-4 right-4 bg-gray-800 text-white p-4 rounded-2xl flex items-center justify-between z-50">
+          <span>Task deleted</span>
+          <button
+            onClick={undoDelete}
+            className="bg-green-600 px-4 py-2 rounded-xl font-medium"
+          >
+            Undo
+          </button>
+        </div>
+      )}
     </div>
   );
 };

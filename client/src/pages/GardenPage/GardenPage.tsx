@@ -4,12 +4,14 @@ import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { useNavigate } from 'react-router-dom';
 import { apiFetch } from '../../utils/api';
+import CreateGardenModal from '../../components/ui/CreateGardenModal';
 
 interface Plant {
   _id: string;
   name: string;
   species: string;
   photoUrl?: string;
+  image?: string; // base64 image string
   careStatus: {
     light: 'good' | 'warning' | 'critical';
     water: 'good' | 'warning' | 'critical';
@@ -118,6 +120,7 @@ const GardenPage: React.FC = () => {
       {/* Create Garden Modal */}
       {showCreateModal && (
         <CreateGardenModal 
+          isOpen={showCreateModal}
           onClose={() => setShowCreateModal(false)}
           onSuccess={() => {
             setShowCreateModal(false);
@@ -170,87 +173,6 @@ const GardenCard: React.FC<{ garden: Garden; onPress: () => void }> = ({ garden,
   );
 };
 
-const CreateGardenModal: React.FC<{ onClose: () => void; onSuccess: () => void }> = ({ onClose, onSuccess }) => {
-  const [name, setName] = useState('');
-  const [location, setLocation] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
-  const locations = ['Living Room', 'Bedroom', 'Balcony', 'Bathroom', 'Kitchen', 'Office', 'Outdoor', 'Other'];
-
-  const handleSubmit = async () => {
-    if (!name.trim() || !location) {
-      setError('Please fill in all fields');
-      return;
-    }
-
-    setLoading(true);
-    try {
-      console.log('Submitting garden:', { name: name.trim(), location });
-      const result = await apiFetch('/api/gardens', {
-        method: 'POST',
-        body: JSON.stringify({ name: name.trim(), location })
-      });
-      console.log('Garden created:', result);
-      onSuccess();
-    } catch (err: any) {
-      console.error('Garden creation failed:', err);
-      setError(err.message || 'Failed to create garden');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
-      <div className="w-full max-w-md p-6 bg-white rounded-2xl">
-        <h2 className="mb-6 text-xl font-semibold" style={{color:'var(--color-text-strong)'}}>Create New Garden</h2>
-        
-        <div className="space-y-4">
-          <div>
-            <label className="block mb-2 text-sm font-medium" style={{color:'var(--color-text-strong)'}}>Garden Name</label>
-            <Input
-              placeholder="Garden Name"
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-                setError('');
-              }}
-            />
-          </div>
-          
-          <div>
-            <label className="block mb-2 text-sm font-medium" style={{color:'var(--color-text-strong)'}}>Location Type</label>
-            <select 
-              value={location}
-              onChange={(e) => {
-                setLocation(e.target.value);
-                setError('');
-              }}
-              className="w-full px-4 py-3 border-2 rounded-full"
-              style={{borderColor:'var(--color-border-gray)'}}
-            >
-              <option value="">Select location</option>
-              {locations.map(loc => (
-                <option key={loc} value={loc}>{loc}</option>
-              ))}
-            </select>
-          </div>
-          
-          {error && <p className="text-sm text-red-600">{error}</p>}
-        </div>
-        
-        <div className="flex gap-3 mt-6">
-          <Button variant="secondary" onClick={onClose} className="flex-1" disabled={loading}>
-            Cancel
-          </Button>
-          <Button onClick={handleSubmit} className="flex-1" disabled={loading}>
-            {loading ? 'Creating...' : 'Save'}
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 export default GardenPage;

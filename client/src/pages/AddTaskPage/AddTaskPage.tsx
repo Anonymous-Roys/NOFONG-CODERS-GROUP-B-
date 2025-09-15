@@ -1,7 +1,7 @@
 // src/pages/AddTaskPage/AddTaskPage.tsx
 import React, { useState, useEffect } from 'react';
 import { apiFetch } from '../../utils/api';
-import { ArrowLeft, Droplets, Scissors, Zap, Flower2, Calendar, Scissors as AlarmIcon } from 'lucide-react';
+import { ArrowLeft, Droplets, Scissors, Zap, Flower2, Calendar, AlarmClock } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { useNavigate } from 'react-router-dom';
 import TimePicker from '../../components/TimePicker';
@@ -222,13 +222,13 @@ const AddTaskPage: React.FC = () => {
             <div>
               <h2 className="mb-6 text-xl font-semibold text-green-800">Which plant?</h2>
               {loading ? (
-                <div className="text-center py-8">
-                  <div className="w-8 h-8 border-4 border-green-200 border-t-green-600 rounded-full animate-spin mx-auto mb-4"></div>
+                <div className="py-8 text-center">
+                  <div className="w-8 h-8 mx-auto mb-4 border-4 border-green-200 rounded-full border-t-green-600 animate-spin"></div>
                   <p>Loading your plants...</p>
                 </div>
               ) : plants.length === 0 ? (
-                <div className="text-center py-8">
-                  <p className="text-gray-600 mb-4">No plants found. Add plants to your garden first.</p>
+                <div className="py-8 text-center">
+                  <p className="mb-4 text-gray-600">No plants found. Add plants to your garden first.</p>
                   <button 
                     onClick={() => navigate('/plants')}
                     className="text-green-600 underline"
@@ -345,7 +345,7 @@ const AddTaskPage: React.FC = () => {
             {/* Alarm Toggle */}
             <div className="flex items-center justify-between p-4 rounded-lg bg-gray-50">
               <div className="flex items-center gap-3">
-                <AlarmIcon className="w-5 h-5 text-gray-600" />
+                <AlarmClock className="w-5 h-5 text-gray-600" />
                 <span className="text-gray-700">Allow alarm</span>
               </div>
               <button

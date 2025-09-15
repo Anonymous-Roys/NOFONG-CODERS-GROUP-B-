@@ -131,11 +131,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     (async () => {
       try {
         const me = await apiFetch('/protected');
-        setUser({ id: me?.userId || 'me', name: me?.username });
+        if (!me || !me.userId) {
+          throw new Error('Invalid user data');
+        }
+        setUser({ id: me.userId, name: me.username });
         setStatus('authenticated');
       } catch (err: any) {
         console.log('No active session found');
-        setStatus('unauthenticated');
+        logout();
       }
     })();
   }, []);

@@ -15,6 +15,10 @@ export interface BaseComponentProps {
     lastWatered: Date;
     nextWatering: Date;
     imageUrl?: string;
+    image?: string; // base64 image string
+    notes?: string;
+    addedAt?: Date;
+    gardenId?: string;
     description: string;
     plantType: string;
     leafType: string;

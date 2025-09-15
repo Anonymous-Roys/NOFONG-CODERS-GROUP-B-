@@ -9,6 +9,7 @@ interface Plant {
   name: string;
   species: string;
   photoUrl?: string;
+  image?: string; // base64 image string
   careStatus: {
     light: 'good' | 'warning' | 'critical';
     water: 'good' | 'warning' | 'critical';
@@ -98,7 +99,7 @@ const GardenDetailPage: React.FC = () => {
             {garden.plants.map((plant) => (
               <div 
                 key={plant._id}
-                onClick={() => navigate(`/plants/${plant._id}`)}
+                // onClick={() => navigate(`/plants/${plant._id}`)}
                 className="flex items-center gap-4 p-4 bg-white border cursor-pointer rounded-2xl"
                 style={{borderColor:'var(--color-border-gray)'}}
               >
@@ -138,7 +139,7 @@ const GardenDetailPage: React.FC = () => {
       {garden.plants.length > 0 && (
         <div className="fixed left-0 right-0 px-5 bottom-24">
           <Button 
-            onClick={() => navigate('/plants/add', { state: { gardenId: garden._id } })}
+            onClick={() => navigate('/plants', { state: { gardenId: garden._id } })}
             className="w-full" 
           >
             Add New Plant

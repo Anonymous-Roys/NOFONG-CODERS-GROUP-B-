@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Check } from 'lucide-react';
 import { apiFetch } from '../../utils/api';
+import { useNavigate } from 'react-router-dom';
 
 interface AddPlantModalProps {
   isOpen: boolean;
@@ -8,6 +9,11 @@ interface AddPlantModalProps {
   onSuccess: () => void;
   plantName?: string;
   plantSpecies?: string;
+  plantId?: string;
+  plantImageUrl?: string;
+  plantDescription?: string;
+  plantformerId?: string;
+  
 }
 
 interface Garden {
@@ -21,7 +27,9 @@ const AddPlantModal: React.FC<AddPlantModalProps> = ({
   onClose, 
   onSuccess, 
   plantName = 'Plant',
-  plantSpecies = ''
+  plantSpecies = '',
+  plantId = '',
+  plantImageUrl = ''
 }) => {
   const [customName, setCustomName] = useState('');
   const [selectedGarden, setSelectedGarden] = useState('');
@@ -30,6 +38,7 @@ const AddPlantModal: React.FC<AddPlantModalProps> = ({
   const [gardens, setGardens] = useState<Garden[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isOpen) {
@@ -67,11 +76,8 @@ const AddPlantModal: React.FC<AddPlantModalProps> = ({
         body: JSON.stringify({
           name: customName.trim(),
           species: plantSpecies || plantName,
-          description: `A ${plantName} plant`,
-          difficulty: 'Easy',
-          careFrequency: 'Often',
-          category: 'Indoor',
-          image: '/1.png',
+          libraryPlantId: plantId,
+          photoUrl: plantImageUrl || '/1.png',
           gardenId: selectedGarden,
           notes: `Added from plant library: ${plantName}`
         })
@@ -97,15 +103,15 @@ const AddPlantModal: React.FC<AddPlantModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl w-full max-w-sm mx-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
+      <div className="w-full max-w-sm mx-auto bg-white rounded-2xl">
         {showSuccess ? (
           /* Success State */
           <div className="p-8 text-center">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full">
               <Check className="w-8 h-8 text-green-600" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">Plant Added</h3>
+            <h3 className="mb-2 text-xl font-semibold text-gray-800">Plant Added</h3>
             <p className="text-gray-600">Your plant has been successfully added to your garden!</p>
           </div>
         ) : (
@@ -115,7 +121,7 @@ const AddPlantModal: React.FC<AddPlantModalProps> = ({
               <h2 className="text-xl font-semibold text-gray-800">Add New Plant</h2>
               <button
                 onClick={onClose}
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                className="p-2 transition-colors rounded-full hover:bg-gray-100"
               >
                 <X className="w-5 h-5 text-gray-500" />
               </button>
@@ -124,7 +130,7 @@ const AddPlantModal: React.FC<AddPlantModalProps> = ({
             <div className="space-y-6">
               {/* Plant Name */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block mb-2 text-sm font-medium text-gray-700">
                   Plant Name
                 </label>
                 <input
@@ -138,14 +144,14 @@ const AddPlantModal: React.FC<AddPlantModalProps> = ({
 
               {/* Assign to Garden */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block mb-2 text-sm font-medium text-gray-700">
                   Assign to Garden
                 </label>
                 <div className="relative">
                   <select
                     value={selectedGarden}
                     onChange={(e) => setSelectedGarden(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent appearance-none bg-white"
+                    className="w-full px-4 py-3 bg-white border border-gray-200 appearance-none rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                     disabled={loading}
                   >
                     <option value="">Select a garden</option>
@@ -182,16 +188,16 @@ const AddPlantModal: React.FC<AddPlantModalProps> = ({
 
               {/* Error Message */}
               {error && (
-                <div className="text-red-600 text-sm text-center">
+                <div className="text-sm text-center text-red-600">
                   {error}
                   {error.includes('No gardens found') && (
                     <div className="mt-2">
                       <button
                         onClick={() => {
                           onClose();
-                          window.location.href = '/garden';
+                          navigate('/garden');
                         }}
-                        className="text-green-600 underline text-sm"
+                        className="text-sm text-green-600 underline"
                       >
                         Create a garden first
                       </button>
@@ -204,7 +210,7 @@ const AddPlantModal: React.FC<AddPlantModalProps> = ({
               <button
                 onClick={handleSave}
                 disabled={loading || !customName.trim() || !selectedGarden}
-                className="w-full bg-green-600 text-white py-3 rounded-xl font-medium hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="w-full py-3 font-medium text-white transition-colors bg-green-600 rounded-xl hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? 'Adding Plant...' : 'Save'}
               </button>
