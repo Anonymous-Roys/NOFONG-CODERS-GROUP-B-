@@ -89,7 +89,7 @@ const GardenDetailPage: React.FC = () => {
             </div>
             <h2 className="mb-2 text-xl font-semibold" style={{color:'var(--color-text-strong)'}}>No plants in this garden</h2>
             <p className="mb-6" style={{color:'var(--color-medium-gray)'}}>Add your first plant to get started!</p>
-            <Button onClick={() => navigate('/plants/add', { state: { gardenId: garden._id } })}>
+            <Button onClick={() => navigate('/plants', { state: { gardenId: garden._id } })}>
               Add Plant
             </Button>
           </div>

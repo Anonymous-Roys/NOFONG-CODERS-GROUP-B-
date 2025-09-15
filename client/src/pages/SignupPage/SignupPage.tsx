@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 const SignupPage: React.FC = () => {
   const { sendOtp, error, loading, clearError } = useAuth();
   const [phone, setPhone] = useState('');
+  const [countryCode, setCountryCode] = useState('+233');
   const [localError, setLocalError] = useState('');
   const navigate = useNavigate();
 
@@ -19,9 +20,10 @@ const SignupPage: React.FC = () => {
       return;
     }
     
-    const result = await sendOtp(phone, 'register');
+    const fullPhone = countryCode + phone;
+    const result = await sendOtp(fullPhone, 'register');
     if (result.success) {
-      navigate('/otp', { state: { phone, purpose: 'register' } });
+      navigate('/otp', { state: { phone: fullPhone, purpose: 'register' } });
     }
   };
 
@@ -40,17 +42,30 @@ const SignupPage: React.FC = () => {
 
           <div className="mb-4">
             <label className="block mb-2 text-sm" style={{color:'var(--color-text-strong)'}}>Phone Number</label>
-            <Input
-              type="tel"
-              placeholder="+233 563 928 928"
-              value={phone}
-              onChange={(e) => {
-                setPhone(e.target.value);
-                setLocalError('');
-                clearError();
-              }}
-              aria-label="Phone number"
-            />
+            <div className="flex gap-2">
+              <select 
+                value={countryCode}
+                onChange={(e) => setCountryCode(e.target.value)}
+                className="px-3 py-2 border rounded-lg" 
+                style={{borderColor:'var(--color-border-gray)'}}
+              >
+                <option value="+233">🇬🇭 +233</option>
+                <option value="+1">🇺🇸 +1</option>
+                <option value="+44">🇬🇧 +44</option>
+              </select>
+              <Input
+                type="tel"
+                placeholder="256798179"
+                value={phone}
+                onChange={(e) => {
+                  setPhone(e.target.value);
+                  setLocalError('');
+                  clearError();
+                }}
+                aria-label="Phone number"
+                className="flex-1"
+              />
+            </div>
             {(error || localError) && (
               <p className="mt-2 text-sm" style={{color:'#dc2626'}}>
                 {localError || error}
