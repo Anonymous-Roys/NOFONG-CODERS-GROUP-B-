@@ -27,21 +27,21 @@ import LoadingScreen from './components/LoadingScreen';
 import './App.css';
 
 function App() {
-  const [showSplash, setShowSplash] = useState(true);
+  // const [showSplash, setShowSplash] = useState(true);
   const [shouldOnboard, setShouldOnboard] = useState<boolean | null>(null);
 
-  const handleSplashComplete = () => {
-    setShowSplash(false);
-  };
+  // const handleSplashComplete = () => {
+  //   setShowSplash(false);
+  // };
 
   useEffect(() => {
     const onboarded = localStorage.getItem('onboarded') === 'true';
     setShouldOnboard(!onboarded);
   }, []);
 
-  if (showSplash) {
-    return <SplashScreen onComplete={handleSplashComplete} />;
-  }
+  // if (showSplash) {
+  //   return <SplashScreen onComplete={handleSplashComplete} />;
+  // }
 
   if (shouldOnboard === null) {
     return <LoadingScreen />;

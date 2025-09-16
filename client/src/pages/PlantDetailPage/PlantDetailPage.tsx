@@ -66,17 +66,17 @@ const PlantDetailPage: React.FC = () => {
     console.log('Plant added successfully!');
   };
 
-  const getCareIcon = (type: string) => {
-    switch (type) {
-      case 'water': return '💧';
-      case 'fertilize': return '🌱';
-      case 'humidity': return '☁️';
-      case 'pruning': return '✂️';
-      case 'sunNeeds': return '☀️';
-      case 'repotting': return '🪴';
-      default: return '🌿';
-    }
-  };
+  // const getCareIcon = (type: string) => {
+  //   switch (type) {
+  //     case 'water': return '💧';
+  //     case 'fertilize': return '🌱';
+  //     case 'humidity': return '☁️';
+  //     case 'pruning': return '✂️';
+  //     case 'sunNeeds': return '☀️';
+  //     case 'repotting': return '🪴';
+  //     default: return '🌿';
+  //   }
+  // };
 
   // Loading state
   if (isLoading) {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Filter, Heart, Menu, Bell } from 'lucide-react';
+import { Search, Heart, Menu, Bell } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { apiFetch } from '../../utils/api';
 
@@ -69,9 +69,9 @@ const PlantsPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <div className="text-center">
-          <div className="w-8 h-8 border-4 border-green-200 border-t-green-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="w-8 h-8 mx-auto mb-4 border-4 border-green-200 rounded-full border-t-green-600 animate-spin"></div>
           <p className="text-gray-600">Loading plants...</p>
         </div>
       </div>
@@ -99,8 +99,8 @@ const PlantsPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white shadow-sm sticky top-0 z-10">
-        <div className="max-w-md mx-auto px-4 py-4">
+      <div className="sticky top-0 z-10 bg-white shadow-sm">
+        <div className="max-w-md px-4 py-4 mx-auto">
           <div className="flex items-center justify-between mb-4">
             <Menu className="w-6 h-6 text-gray-600" />
             <h1 className="text-xl font-bold text-gray-800">Plant Library</h1>
@@ -109,15 +109,14 @@ const PlantsPage: React.FC = () => {
 
           {/* Search Bar */}
           <div className="relative mb-4">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Search className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
             <input
               type="text"
               placeholder="Search plants"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-12 py-3 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full py-3 pl-10 pr-12 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
             />
-            <Filter className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-green-600" />
           </div>
 
           {/* Filter Tabs */}
@@ -140,7 +139,7 @@ const PlantsPage: React.FC = () => {
       </div>
 
       {/* Plants List */}
-      <div className="max-w-md mx-auto px-4 py-4">
+      <div className="max-w-md px-4 py-4 mx-auto">
         <div className="space-y-3">
           {filteredPlants.map((plant) => (
             <div
@@ -151,15 +150,15 @@ const PlantsPage: React.FC = () => {
                   navigate(`/plants/${plant.id}`);
                 }, 300);
               }}
-              className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer"
+              className="duration-200 bg-white border-green-500 shadow-sm cursor-pointer transition-noneion-all border-p-4 rounded-2xl hover:shadow-md"
             >
               <div className="flex items-center space-x-4">
                 {/* Plant Image */}
-                <div className="w-16 h-16 rounded-2xl overflow-hidden flex-shrink-0">
+                <div className="flex-shrink-0 w-16 h-16 overflow-hidden rounded-2xl">
                   <img 
                     src={plant.image} 
                     alt={plant.name}
-                    className="w-full h-full object-cover"
+                    className="object-cover w-full h-full"
                   />
                 </div>
 
@@ -172,7 +171,7 @@ const PlantsPage: React.FC = () => {
                         e.stopPropagation();
                         toggleFavorite(plant.id);
                       }}
-                      className="p-1 hover:scale-110 transition-transform"
+                      className="p-1 transition-transform hover:scale-110"
                     >
                       <Heart 
                         className={`w-5 h-5 transition-colors ${
@@ -184,7 +183,7 @@ const PlantsPage: React.FC = () => {
                     </button>
                   </div>
 
-                  <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                  <p className="mb-3 text-sm text-gray-600 line-clamp-2">
                     {plant.description}
                   </p>
 
@@ -193,9 +192,9 @@ const PlantsPage: React.FC = () => {
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${getDifficultyColor(plant.difficulty)}`}>
                       {plant.difficulty}
                     </span>
-                    <div className="flex items-center space-x-1 bg-gray-50 px-2 py-1 rounded-full">
+                    <div className="flex items-center px-2 py-1 space-x-1 rounded-full bg-gray-50">
                       <span className="text-sm">{getCareIcon(plant.careFrequency)}</span>
-                      <span className="text-xs text-gray-600 font-medium">{plant.careFrequency}</span>
+                      <span className="text-xs font-medium text-gray-600">{plant.careFrequency}</span>
                     </div>
                   </div>
                 </div>
@@ -205,18 +204,18 @@ const PlantsPage: React.FC = () => {
         </div>
 
         {filteredPlants.length === 0 && (
-          <div className="text-center py-16">
-            <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="py-16 text-center">
+            <div className="flex items-center justify-center w-20 h-20 mx-auto mb-4 bg-gray-100 rounded-full">
               <Search className="w-8 h-8 text-gray-400" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-800 mb-2">No plants found</h3>
-            <p className="text-gray-600 mb-6">Try adjusting your search or filters</p>
+            <h3 className="mb-2 text-lg font-semibold text-gray-800">No plants found</h3>
+            <p className="mb-6 text-gray-600">Try adjusting your search or filters</p>
             <button
               onClick={() => {
                 setSearchQuery('');
                 setActiveFilter('All');
               }}
-              className="bg-green-600 text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-green-700 transition-colors"
+              className="px-6 py-2 text-sm font-medium text-white transition-colors bg-green-600 rounded-full hover:bg-green-700"
             >
               Clear filters
             </button>
@@ -226,9 +225,9 @@ const PlantsPage: React.FC = () => {
 
       {/* Loading Overlay */}
       {loadingDetail && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-8 text-center">
-            <div className="w-8 h-8 border-4 border-green-200 border-t-green-600 rounded-full animate-spin mx-auto mb-4"></div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="p-8 text-center bg-white rounded-2xl">
+            <div className="w-8 h-8 mx-auto mb-4 border-4 border-green-200 rounded-full border-t-green-600 animate-spin"></div>
             <p className="text-gray-600">Loading plant details...</p>
           </div>
         </div>

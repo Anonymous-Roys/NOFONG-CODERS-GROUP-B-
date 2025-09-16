@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { apiFetch } from '../../utils/api';
 import { requestNotificationPermission, scheduleTaskNotification, registerServiceWorker, showTaskNotification } from '../../utils/notifications';
 import LoadingScreen from '../../components/LoadingScreen';
+import AppHeader from '../../components/AppHeader';
 
 interface TaskManagerProps {
   onBack?: () => void;
@@ -265,12 +266,7 @@ export const TaskManager: React.FC<TaskManagerProps> = () => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
-        <h1 className="text-xl font-semibold text-green-600">
-          Task Manager
-          <span className="block text-xs font-normal text-gray-500">
-            {currentTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}
-          </span>
-        </h1>
+        <h1 className="text-xl font-semibold text-green-600">Task Manager</h1>
         <button 
           onClick={async () => {
             const permission = await requestNotificationPermission();

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronDown, ChevronUp, ArrowLeft } from 'lucide-react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
+import AppHeader from '../../components/AppHeader';
 
 const HelpCenter: React.FC = () => {
   const navigate = useNavigate();
@@ -47,19 +48,7 @@ const HelpCenter: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm">
-        <div className="flex items-center justify-between p-4">
-          <button 
-            onClick={() => navigate(-1)}
-            className="p-2 rounded-lg hover:bg-gray-100"
-          >
-            <ArrowLeft className="w-6 h-6 text-gray-700" />
-          </button>
-          <h1 className="text-xl font-semibold text-green-600">Help Center</h1>
-          <div className="w-10"></div>
-        </div>
-      </div>
+      <AppHeader title="Help Center" />
 
       {/* Content */}
       <div className="p-5">

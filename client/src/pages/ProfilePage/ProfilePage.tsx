@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { apiFetch } from '../../utils/api';
 import LoadingScreen from '../../components/LoadingScreen';
+import AppHeader from '../../components/AppHeader';
 
 const ProfilePage: React.FC = () => {
   const navigate = useNavigate();
@@ -36,19 +37,7 @@ const ProfilePage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-green-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm">
-        <div className="flex items-center justify-between p-4">
-          <button 
-            onClick={() => navigate(-1)}
-            className="text-gray-600 hover:text-gray-800"
-          >
-            <ArrowLeft className="w-5 h-5 text-gray-600" />
-          </button>
-          <h1 className="text-xl font-semibold text-green-600">Profile</h1>
-          <div className="w-6"></div>
-        </div>
-      </div>
+      <AppHeader title="Profile" />
 
       {/* Main Content */}
       <div className="p-6">
