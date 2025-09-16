@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { apiFetch } from '../../utils/api';
 import { requestNotificationPermission, scheduleTaskNotification, registerServiceWorker, showTaskNotification } from '../../utils/notifications';
 import LoadingScreen from '../../components/LoadingScreen';
-import AppHeader from '../../components/AppHeader';
+// import AppHeader from '../../components/AppHeader';
 
 interface TaskManagerProps {
   onBack?: () => void;
@@ -23,7 +23,7 @@ export const TaskManager: React.FC<TaskManagerProps> = () => {
   useEffect(() => {
     fetchTasks();
     initializeNotifications();
-    
+    console.log(currentTime)
     const timer = setInterval(() => setCurrentTime(new Date()), 60000);
     return () => clearInterval(timer);
   }, []);

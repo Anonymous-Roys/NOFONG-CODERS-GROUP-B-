@@ -11,7 +11,7 @@ import { TaskManager } from './pages/TaskManager/TaskManager';
 import HomePage from './pages/Homepage/Homepage';
 import PlantDetailPage from './pages/PlantDetailPage/PlantDetailPage';
 import LoginPage from './pages/LoginPage/LoginPage';
-import SplashScreen from './components/SplashScreen';
+// import SplashScreen from './components/SplashScreen';
 import Onboarding from './pages/Onboarding/Onboarding';
 import './styles/design-system.css'
 import './styles/base.css';
