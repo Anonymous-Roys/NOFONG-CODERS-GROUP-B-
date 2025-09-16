@@ -1,12 +1,29 @@
 // src/pages/ProfilePage/ProfilePage.tsx
-import React from 'react';
-import { User, Bell, HelpCircle, Settings, ChevronRight, CheckSquare } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { User, Bell, HelpCircle, Settings, ChevronRight, CheckSquare, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { apiFetch } from '../../utils/api';
 
 const ProfilePage: React.FC = () => {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
+  const [userDetails, setUserDetails] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const data = await apiFetch('/profile');
+        setUserDetails(data);
+      } catch (err) {
+        console.error('Failed to fetch user details:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUserDetails();
+  }, []);
   
   const menuItems = [
     { icon: User, label: 'My Account', path: '/coming-soon' },
@@ -25,9 +42,7 @@ const ProfilePage: React.FC = () => {
             onClick={() => navigate(-1)}
             className="text-gray-600 hover:text-gray-800"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
+            <ArrowLeft className="w-5 h-5 text-gray-600" />
           </button>
           <h1 className="text-xl font-semibold text-green-600">Profile</h1>
           <div className="w-6"></div>
@@ -49,11 +64,23 @@ const ProfilePage: React.FC = () => {
           </div>
           
           {/* User Info */}
-          <h2 className="mb-1 text-2xl font-bold text-gray-800">{user?.name || 'Guest'}</h2>
-          {user?.email && <p className="text-gray-600">{user.email}</p>}
-          {user?.dob && <p className="text-gray-600">Born: {new Date(user.dob).toLocaleDateString()}</p>}
-          {user?.location && <p className="text-gray-600">📍 {user.location}</p>}
-          {!user?.email && <p className="text-gray-600">{user?.id ? 'Logged in' : 'Not logged in'}</p>}
+          {loading ? (
+            <p className="text-gray-600">Loading...</p>
+          ) : (
+            <>
+              <h2 className="mb-1 text-2xl font-bold text-gray-800">{userDetails?.username || 'Guest'}</h2>
+              <p className="text-gray-600">{userDetails?.phone}</p>
+              {/* {userDetails?.dateOfBirth && (
+                <p className="text-gray-600">Born: {new Date(userDetails.dateOfBirth).toLocaleDateString()}</p>
+              )}
+              {userDetails?.location && (
+                <p className="text-gray-600">📍 {userDetails.location}</p>
+              )}
+              {userDetails?.gender && (
+                <p className="text-gray-600">Gender: {userDetails.gender}</p>
+              )} */}
+            </>
+          )}
           <button onClick={()=>{ logout(); navigate('/login'); }} className="px-5 py-2 mt-4 text-red-600 border border-red-300 rounded-full hover:bg-red-50">Log out</button>
         </div>
 

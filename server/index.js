@@ -54,6 +54,18 @@ app.get("/protected", authenticateToken, (req, res) => {
   });
 });
 
+app.get("/profile", authenticateToken, async (req, res) => {
+  try {
+    const user = await require('./models/user').findById(req.user.userId).select('-password');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 // Debug middleware
 app.use('/api/gardens', (req, res, next) => {
   console.log('Garden API called:', req.method, req.path);

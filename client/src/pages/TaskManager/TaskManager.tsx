@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiFetch } from '../../utils/api';
-import { requestNotificationPermission, scheduleTaskNotification, registerServiceWorker } from '../../utils/notifications';
+import { requestNotificationPermission, scheduleTaskNotification, registerServiceWorker, showTaskNotification } from '../../utils/notifications';
 
 interface TaskManagerProps {
   onBack?: () => void;
@@ -130,15 +130,7 @@ export const TaskManager: React.FC<TaskManagerProps> = () => {
     }
   };
 
-  const showTaskNotification = (task: any) => {
-    if ('Notification' in window && Notification.permission === 'granted') {
-      new Notification(`🌱 ${task.plantName} needs ${task.type}!`, {
-        body: `It's time to ${task.type} your ${task.plantName}`,
-        icon: task.imageUrl,
-        tag: task.id
-      });
-    }
-  };
+
 
   const getTasksByStatus = () => {
     const now = new Date();

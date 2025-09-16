@@ -53,6 +53,7 @@ const HomePage: React.FC = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedPlant, setSelectedPlant] = useState<PopularPlant | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [notifications, setNotifications] = useState<any[]>([]);
 
   // Calculate completed tasks count
   const todayTasksCompleted = tasks.filter(task => task.isCompleted).length;
@@ -109,7 +110,60 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     fetchTasks();
     fetchPopularPlants();
+    generateNotifications();
   }, [fetchTasks, fetchPopularPlants]);
+
+  const generateNotifications = () => {
+    const now = new Date();
+    const notifs = [];
+    
+    // Task reminders
+    const dueTasks = tasks.filter(task => {
+      const taskTime = new Date(task.dueDate);
+      const timeDiff = taskTime.getTime() - now.getTime();
+      return !task.isCompleted && timeDiff > 0 && timeDiff <= 2 * 60 * 60 * 1000; // Next 2 hours
+    });
+    
+    dueTasks.forEach(task => {
+      const timeUntil = Math.ceil((new Date(task.dueDate).getTime() - now.getTime()) / (60 * 1000));
+      notifs.push({
+        id: `task-${task.id}`,
+        type: 'reminder',
+        title: 'Task Reminder',
+        message: `${task.type} your ${task.plantName} in ${timeUntil} minutes`,
+        color: 'green'
+      });
+    });
+    
+    // Overdue tasks
+    const overdueTasks = tasks.filter(task => 
+      !task.isCompleted && new Date(task.dueDate) < now
+    );
+    
+    if (overdueTasks.length > 0) {
+      notifs.push({
+        id: 'overdue',
+        type: 'warning',
+        title: 'Overdue Tasks',
+        message: `You have ${overdueTasks.length} overdue task${overdueTasks.length > 1 ? 's' : ''}`,
+        color: 'red'
+      });
+    }
+    
+    // Completion celebration
+    const completedToday = tasks.filter(task => task.isCompleted).length;
+    if (completedToday > 0) {
+      notifs.push({
+        id: 'completed',
+        type: 'success',
+        title: 'Great Job!',
+        message: `You've completed ${completedToday} task${completedToday > 1 ? 's' : ''} today`,
+        color: 'blue'
+      });
+    }
+    
+    setNotifications(notifs.slice(0, 3)); // Show max 3 notifications
+  };
 
   const handleTaskComplete = async (taskId: string) => {
     try {
@@ -222,7 +276,11 @@ const HomePage: React.FC = () => {
           aria-label="Notifications"
         >
           <Bell className="w-6 h-6 text-gray-700" />
-          <span className="absolute w-2 h-2 bg-red-500 rounded-full top-1 right-1"></span>
+          {notifications.length > 0 && (
+            <span className="absolute flex items-center justify-center w-5 h-5 text-xs text-white bg-red-500 rounded-full -top-1 -right-1">
+              {notifications.length}
+            </span>
+          )}
         </button>
 
         {/* Side Menu */}
@@ -301,18 +359,27 @@ const HomePage: React.FC = () => {
                 </button>
               </div>
               <div className="space-y-3">
-                <div className="p-3 border border-green-200 rounded-lg bg-green-50">
-                  <p className="text-sm font-medium text-green-800">Task Reminder</p>
-                  <p className="text-xs text-green-600">Water your Peace Lily in 2 hours</p>
-                </div>
-                <div className="p-3 border border-blue-200 rounded-lg bg-blue-50">
-                  <p className="text-sm font-medium text-blue-800">Plant Tip</p>
-                  <p className="text-xs text-blue-600">Your tomato plant is ready for pruning</p>
-                </div>
-                <div className="p-3 border border-yellow-200 rounded-lg bg-yellow-50">
-                  <p className="text-sm font-medium text-yellow-800">Weekly Summary</p>
-                  <p className="text-xs text-yellow-600">You've completed 5 tasks this week!</p>
-                </div>
+                {notifications.length === 0 ? (
+                  <div className="p-3 text-center text-gray-500">
+                    <p className="text-sm">No new notifications</p>
+                  </div>
+                ) : (
+                  notifications.map(notif => {
+                    const colorClasses = {
+                      green: 'border-green-200 bg-green-50 text-green-800',
+                      blue: 'border-blue-200 bg-blue-50 text-blue-800',
+                      red: 'border-red-200 bg-red-50 text-red-800',
+                      yellow: 'border-yellow-200 bg-yellow-50 text-yellow-800'
+                    };
+                    
+                    return (
+                      <div key={notif.id} className={`p-3 border rounded-lg ${colorClasses[notif.color as keyof typeof colorClasses]}`}>
+                        <p className="text-sm font-medium">{notif.title}</p>
+                        <p className="text-xs opacity-80">{notif.message}</p>
+                      </div>
+                    );
+                  })
+                )}
               </div>
             </div>
           </div>
