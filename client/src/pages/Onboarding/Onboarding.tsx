@@ -52,12 +52,20 @@ const Onboarding: React.FC = () => {
   const next = () => setCurrent((c) => Math.min(c + 1, slides.length - 1));
   const prev = () => setCurrent((c) => Math.max(c - 1, 0));
 
-  const finishTo = (path: '/login' | '/signup') => {
+  const handleBeginJourney = () => {
     localStorage.setItem('onboarded', 'true');
-    navigate(path);
+    navigate('/signup');
   };
 
-  const skip = () => finishTo('/login');
+  const handleLogin = () => {
+    localStorage.setItem('onboarded', 'true');
+    navigate('/login');
+  };
+
+  const handleSkip = () => {
+    localStorage.setItem('onboarded', 'true');
+    navigate('/login');
+  };
 
   const slide = slides[current];
 
@@ -89,16 +97,16 @@ const Onboarding: React.FC = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-3 mt-8">
-            <Button variant="primary" size="lg" onClick={() => finishTo('/signup')}>{slide.cta ?? 'Begin your journey'}</Button>
-            <Button variant="outline" size="md" onClick={() => finishTo('/login')}>Log in</Button>
+            <Button variant="primary" size="lg" onClick={handleBeginJourney}>{slide.cta ?? 'Begin your journey'}</Button>
+            <Button variant="outline" size="md" onClick={handleLogin}>Log in</Button>
           </div>
         )}
 
         <div className="flex items-center justify-between mt-6 text-gray-600">
-          <button className="underline" onClick={skip}>Skip</button>
+          <button className="underline" onClick={handleSkip}>Skip</button>
           <span>
             Already have an account?{' '}
-            <Link className="font-semibold underline text-brand" to="/login">Log in here</Link>
+            <button className="font-semibold underline text-brand" onClick={handleLogin}>Log in here</button>
           </span>
         </div>
       </div>
