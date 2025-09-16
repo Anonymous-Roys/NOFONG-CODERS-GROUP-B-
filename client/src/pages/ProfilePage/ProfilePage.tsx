@@ -1,6 +1,6 @@
 // src/pages/ProfilePage/ProfilePage.tsx
 import React, { useState, useEffect } from 'react';
-import { User, Bell, HelpCircle, Settings, ChevronRight, CheckSquare, ArrowLeft } from 'lucide-react';
+import { User, Bell, HelpCircle, Settings, ChevronRight, CheckSquare } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { apiFetch } from '../../utils/api';
