@@ -197,7 +197,7 @@ const HomePage: React.FC = () => {
   };
 
   const handleAddNewPlant = () => {
-    navigate('/plants/add');
+    navigate('/plants/');
   };
 
   const handleAddNewTask = () => {
