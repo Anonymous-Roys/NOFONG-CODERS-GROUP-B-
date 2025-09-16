@@ -18,7 +18,7 @@ import {
   ClipboardCheck,
   X,
   Settings,
-  HelpCirclenavi
+  HelpCircle,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
@@ -74,13 +74,16 @@ const HomePage: React.FC = () => {
         dueDate: new Date(task.date)
       }));
       
-      // Show only upcoming tasks (max 3) on homepage
-      const upcomingTasks = allTasks
-        .filter((task: any) => !task.isCompleted && task.dueDate >= new Date())
-        .sort((a: any, b: any) => a.dueDate.getTime() - b.dueDate.getTime())
-        .slice(0, 3);
+      // Show due and upcoming tasks (max 2) on homepage
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
       
-      setTasks(upcomingTasks);
+      const relevantTasks = allTasks
+        .filter((task: any) => !task.isCompleted && task.dueDate >= today)
+        .sort((a: any, b: any) => a.dueDate.getTime() - b.dueDate.getTime())
+        .slice(0, 2);
+      
+      setTasks(relevantTasks);
     } catch (err) {
       console.error('Failed to fetch tasks:', err);
     } finally {
@@ -114,6 +117,10 @@ const HomePage: React.FC = () => {
       setTasks(prev => prev.map(task => 
         task.id === taskId ? { ...task, isCompleted: true } : task
       ));
+      
+      // Play completion sound
+      const audio = new Audio('/completed-sound.wav');
+      audio.play().catch(() => {});
     } catch (err) {
       console.error('Failed to complete task:', err);
     }
@@ -420,14 +427,18 @@ const HomePage: React.FC = () => {
                       <button 
                         onClick={() => handleTaskComplete(task.id)}
                         disabled={task.isCompleted}
-                        className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-colors flex-shrink-0 ${
+                        className={`w-12 h-12 rounded-full border-2 flex items-center justify-center transition-colors flex-shrink-0 ${
                           task.isCompleted 
                             ? 'bg-green-600 border-green-600 cursor-default' 
-                            : 'border-gray-300 hover:border-green-400'
+                            : 'border-green-400 hover:border-green-600 hover:bg-green-50'
                         }`}
                         aria-label={task.isCompleted ? 'Task completed' : 'Mark as complete'}
                       >
-                        {task.isCompleted && <CheckCircle className="w-5 h-5 text-white" />}
+                        {task.isCompleted ? (
+                          <CheckCircle className="w-6 h-6 text-white" />
+                        ) : (
+                          <div className="w-4 h-4 border-2 border-green-400 rounded-full"></div>
+                        )}
                       </button>
                     </div>
                   </div>

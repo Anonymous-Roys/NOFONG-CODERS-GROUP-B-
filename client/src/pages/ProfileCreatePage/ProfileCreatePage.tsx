@@ -5,7 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const ProfileCreatePage: React.FC = () => {
-  const { completeProfile } = useAuth();
+  const { completeProfile, logout } = useAuth();
   const navigate = useNavigate();
 
   const [name, setName] = useState('');
@@ -26,8 +26,29 @@ const ProfileCreatePage: React.FC = () => {
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
-    await completeProfile({ name, email: email || undefined, dob: dob || undefined, location: location || undefined });
-    navigate('/');
+    const result = await completeProfile({ name, email: email || undefined, dob: dob || undefined, location: location || undefined });
+    if (result.success) {
+      navigate('/');
+    }
+  };
+
+  const onSkip = async () => {
+    // Create profile with minimal data
+    const result = await completeProfile({ 
+      name: 'User', 
+      email: undefined, 
+      dob: undefined, 
+      location: undefined 
+    });
+    if (result.success) {
+      navigate('/');
+    }
+  };
+
+  const onBack = () => {
+    // Clear auth state and go back to signup
+    logout();
+    navigate('/signup');
   };
 
   return (
@@ -54,8 +75,17 @@ const ProfileCreatePage: React.FC = () => {
           </div>
           <Input label="Location (Optional)" placeholder="Tarkwa, Ghana" value={location} onChange={(e) => setLocation(e.target.value)} endIcon={<span></span>} />
 
-          <Button type="submit" className="w-full">Complete</Button>
+          <div className="flex gap-3">
+            <Button type="submit" className="flex-1">Complete</Button>
+            <Button type="button" variant="secondary" onClick={onSkip} className="flex-1">Skip</Button>
+          </div>
         </form>
+
+        <div className="flex justify-center mt-4">
+          <Button variant="ghost" onClick={onBack}>
+            ← Back to Sign Up
+          </Button>
+        </div>
 
       </div>
     </div>

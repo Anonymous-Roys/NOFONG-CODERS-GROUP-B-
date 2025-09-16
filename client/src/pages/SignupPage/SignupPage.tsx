@@ -9,6 +9,7 @@ const SignupPage: React.FC = () => {
   const [phone, setPhone] = useState('');
   const [countryCode, setCountryCode] = useState('+233');
   const [localError, setLocalError] = useState('');
+  const [shouldShowLogin, setShouldShowLogin] = useState(false);
   const navigate = useNavigate();
 
   const onSend = async () => {
@@ -24,6 +25,10 @@ const SignupPage: React.FC = () => {
     const result = await sendOtp(fullPhone, 'register');
     if (result.success) {
       navigate('/otp', { state: { phone: fullPhone, purpose: 'register' } });
+    } else if (result.shouldLogin) {
+      // Phone already exists, suggest login
+      setLocalError(result.error || 'Phone already exists');
+      setShouldShowLogin(true);
     }
   };
 
@@ -32,9 +37,9 @@ const SignupPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4" style={{backgroundColor: 'var(--color-white)'}}>
+    <div className="flex items-center justify-center min-h-screen px-4" style={{backgroundColor: 'var(--color-white)'}}>
       <div className="w-full max-w-md">
-        <div className="bg-white/80 rounded-2xl p-6 shadow-md border" style={{borderColor:'var(--color-border-gray)'}}>
+        <div className="p-6 border shadow-md bg-white/80 rounded-2xl" style={{borderColor:'var(--color-border-gray)'}}>
           <div className="flex flex-col items-center gap-4 mb-8">
             <div className="w-24 h-24 rounded-full" style={{backgroundColor:'var(--color-light-green)'}} />
             <h1 className="text-2xl font-semibold" style={{fontFamily:'var(--font-family-heading)', color:'var(--color-text-strong)'}}>Sign Up</h1>
@@ -46,7 +51,7 @@ const SignupPage: React.FC = () => {
               <select 
                 value={countryCode}
                 onChange={(e) => setCountryCode(e.target.value)}
-                className="px-3 py-2 border rounded-lg" 
+                className="px-5 py-0 border rounded-full" 
                 style={{borderColor:'var(--color-border-gray)'}}
               >
                 <option value="+233">🇬🇭 +233</option>
@@ -60,6 +65,7 @@ const SignupPage: React.FC = () => {
                 onChange={(e) => {
                   setPhone(e.target.value);
                   setLocalError('');
+                  setShouldShowLogin(false);
                   clearError();
                 }}
                 aria-label="Phone number"
@@ -67,9 +73,20 @@ const SignupPage: React.FC = () => {
               />
             </div>
             {(error || localError) && (
-              <p className="mt-2 text-sm" style={{color:'#dc2626'}}>
-                {localError || error}
-              </p>
+              <div className="mt-2">
+                <p className="text-sm" style={{color:'#dc2626'}}>
+                  {localError || error}
+                </p>
+                {shouldShowLogin && (
+                  <Button 
+                    variant="secondary" 
+                    className="mt-2 w-full" 
+                    onClick={() => navigate('/login')}
+                  >
+                    Go to Login
+                  </Button>
+                )}
+              </div>
             )}
           </div>
 
@@ -89,17 +106,17 @@ const SignupPage: React.FC = () => {
           </div>
 
           <div className="grid gap-3">
-            <Button variant="secondary" className="w-full flex items-center justify-center gap-3">
+            <Button variant="secondary" className="flex items-center justify-center w-full gap-3">
               <span className="text-lg">G</span>
               Continue with Google
             </Button>
-            <Button variant="secondary" className="w-full flex items-center justify-center gap-3">
+            <Button variant="secondary" className="flex items-center justify-center w-full gap-3">
               <span className="text-lg"></span>
               Continue with Apple
             </Button>
           </div>
           
-          <p className="text-center mt-8 text-sm">
+          <p className="mt-8 text-sm text-center">
             Already have an account? <a href="/login" className="underline" style={{color:'var(--color-brand)'}}>Log in here</a>
           </p>
         </div>

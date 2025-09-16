@@ -10,7 +10,7 @@ interface AuthContextValue {
   error: string;
   loading: boolean;
   user?: { id: string; name?: string; email?: string; dob?: string; location?: string };
-  sendOtp: (phone: string, purpose?: 'login'|'register') => Promise<{ success: boolean; error?: string }>;
+  sendOtp: (phone: string, purpose?: 'login'|'register') => Promise<{ success: boolean; error?: string; shouldLogin?: boolean }>;
   verifyOtp: (otp: string) => Promise<'logged_in' | 'profile_pending' | 'invalid' | 'expired' | 'rate_limited'>;
   completeProfile: (data: { name: string; email?: string; dob?: string; location?: string }) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
@@ -47,6 +47,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (err: any) {
       const errorMsg = err.message || 'Failed to send verification code';
       setError(errorMsg);
+      
+      // If phone already exists during registration, suggest login
+      if (err.message?.includes('already exists') && purpose === 'register') {
+        return { success: false, error: errorMsg, shouldLogin: true };
+      }
+      
       return { success: false, error: errorMsg };
     } finally {
       setLoading(false);

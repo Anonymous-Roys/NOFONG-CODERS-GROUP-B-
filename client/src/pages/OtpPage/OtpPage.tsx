@@ -12,7 +12,7 @@ const OtpPage: React.FC = () => {
   const navigate = useNavigate();
   const { sendOtp, verifyOtp, loading, error: authError, clearError } = useAuth();
   const [error, setError] = React.useState('');
-  const [countdown, setCountdown] = React.useState(30);
+  const [countdown, setCountdown] = React.useState(60);
   const [attempts, setAttempts] = React.useState(0);
 
   React.useEffect(() => {

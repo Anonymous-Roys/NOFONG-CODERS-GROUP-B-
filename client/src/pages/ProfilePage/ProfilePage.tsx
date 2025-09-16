@@ -1,6 +1,6 @@
 // src/pages/ProfilePage/ProfilePage.tsx
 import React from 'react';
-import { User, Bell, FileText, HelpCircle, Settings, ChevronRight, CheckSquare } from 'lucide-react';
+import { User, Bell, HelpCircle, Settings, ChevronRight, CheckSquare } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
@@ -12,7 +12,6 @@ const ProfilePage: React.FC = () => {
     { icon: User, label: 'My Account', path: '/coming-soon' },
     { icon: CheckSquare, label: 'Tasks', path: '/tasks' },
     { icon: Bell, label: 'Notifications', path: '/coming-soon' },
-    { icon: FileText, label: 'Privacy Policy', path: '/coming-soon' },
     { icon: HelpCircle, label: 'Help Center', path: '/coming-soon' },
     { icon: Settings, label: 'Settings', path: '/coming-soon' }
   ];
@@ -52,6 +51,8 @@ const ProfilePage: React.FC = () => {
           {/* User Info */}
           <h2 className="mb-1 text-2xl font-bold text-gray-800">{user?.name || 'Guest'}</h2>
           {user?.email && <p className="text-gray-600">{user.email}</p>}
+          {user?.dob && <p className="text-gray-600">Born: {new Date(user.dob).toLocaleDateString()}</p>}
+          {user?.location && <p className="text-gray-600">📍 {user.location}</p>}
           {!user?.email && <p className="text-gray-600">{user?.id ? 'Logged in' : 'Not logged in'}</p>}
           <button onClick={()=>{ logout(); navigate('/login'); }} className="px-5 py-2 mt-4 text-red-600 border border-red-300 rounded-full hover:bg-red-50">Log out</button>
         </div>

@@ -127,6 +127,14 @@ async function sendOtp(req, res) {
         return res.status(404).json({ message: 'No account found with this phone number. Please sign up first.', field: 'phone' });
       }
     }
+    
+    // For registration, check if user already exists
+    if (purpose === 'register') {
+      const existingUser = await User.findOne({ phone });
+      if (existingUser) {
+        return res.status(409).json({ message: 'An account with this phone number already exists. Please log in instead.', field: 'phone' });
+      }
+    }
     const code = ('' + Math.floor(100000 + Math.random() * 900000));
     console.log(`Generated OTP for ${phone}: ${code}`);
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000);

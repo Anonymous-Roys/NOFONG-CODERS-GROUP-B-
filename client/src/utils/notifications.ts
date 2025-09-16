@@ -34,7 +34,7 @@ export const scheduleTaskNotification = (task: any) => {
       });
 
       // Play notification sound
-      const audio = new Audio('/notification-sound.mp3');
+      const audio = new Audio('/notification-sound.wav');
       audio.play().catch(() => console.log('Could not play sound'));
     }, timeUntilTask);
   }

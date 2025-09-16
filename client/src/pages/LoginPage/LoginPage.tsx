@@ -10,6 +10,7 @@ const LoginPage: React.FC = () => {
   const [phone, setPhone] = React.useState('');
   const [countryCode, setCountryCode] = React.useState('+233');
   const [localError, setLocalError] = React.useState('');
+  const [shouldShowSignup, setShouldShowSignup] = React.useState(false);
   const navigate = useNavigate();
 
   const onSend = async () => {
@@ -25,6 +26,8 @@ const LoginPage: React.FC = () => {
     const result = await sendOtp(fullPhone, 'login');
     if (result.success) {
       navigate('/otp', { state: { phone: fullPhone, purpose: 'login' } });
+    } else if (result.error?.includes('No account found')) {
+      setShouldShowSignup(true);
     }
   };
 
@@ -61,6 +64,7 @@ const LoginPage: React.FC = () => {
                 onChange={(e) => {
                   setPhone(e.target.value);
                   setLocalError('');
+                  setShouldShowSignup(false);
                   clearError();
                 }}
                 aria-label="Phone number"
@@ -68,9 +72,20 @@ const LoginPage: React.FC = () => {
               />
             </div>
             {(error || localError) && (
-              <p className="mt-2 text-sm" style={{color:'#dc2626'}}>
-                {localError || error}
-              </p>
+              <div className="mt-2">
+                <p className="text-sm" style={{color:'#dc2626'}}>
+                  {localError || error}
+                </p>
+                {shouldShowSignup && (
+                  <Button 
+                    variant="secondary" 
+                    className="mt-2 w-full" 
+                    onClick={() => navigate('/signup')}
+                  >
+                    Go to Sign Up
+                  </Button>
+                )}
+              </div>
             )}
           </div>
 
