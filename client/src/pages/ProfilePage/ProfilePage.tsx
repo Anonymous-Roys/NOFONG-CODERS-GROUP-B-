@@ -4,6 +4,7 @@ import { User, Bell, HelpCircle, Settings, ChevronRight, CheckSquare, ArrowLeft 
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { apiFetch } from '../../utils/api';
+import LoadingScreen from '../../components/LoadingScreen';
 
 const ProfilePage: React.FC = () => {
   const navigate = useNavigate();
@@ -65,7 +66,7 @@ const ProfilePage: React.FC = () => {
           
           {/* User Info */}
           {loading ? (
-            <p className="text-gray-600">Loading...</p>
+            <LoadingScreen />
           ) : (
             <>
               <h2 className="mb-1 text-2xl font-bold text-gray-800">{userDetails?.username || 'Guest'}</h2>

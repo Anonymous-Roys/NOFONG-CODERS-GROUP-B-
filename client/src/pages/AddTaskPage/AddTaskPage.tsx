@@ -78,7 +78,6 @@ const AddTaskPage: React.FC = () => {
     { id: 'Daily', label: 'Daily' },
     { id: 'Weekly', label: 'Weekly' },
     { id: 'Every 3 days', label: 'Every 3 days' },
-    { id: 'Custom', label: 'Custom' }
   ];
 
   const handleNext = () => {
@@ -428,14 +427,14 @@ const AddTaskPage: React.FC = () => {
 
       {/* Success Message */}
       {successMessage && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-8 mx-4 max-w-sm w-full text-center">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="w-full max-w-sm p-8 mx-4 text-center bg-white rounded-2xl">
+            <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full">
               <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold mb-2">{successMessage}</h3>
+            <h3 className="mb-2 text-lg font-semibold">{successMessage}</h3>
             <p className="text-gray-600">Redirecting to tasks...</p>
           </div>
         </div>

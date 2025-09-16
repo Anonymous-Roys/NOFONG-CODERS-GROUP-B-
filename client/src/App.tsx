@@ -23,6 +23,7 @@ import OtpPage from './pages/OtpPage/OtpPage';
 import { RequireAuth, PublicOnly } from './routes/guards';
 import ComingSoon from './components/ComingSoon';
 import HelpCenter from './pages/HelpCenter/HelpCenter';
+import LoadingScreen from './components/LoadingScreen';
 import './App.css';
 
 function App() {
@@ -43,11 +44,7 @@ function App() {
   }
 
   if (shouldOnboard === null) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="w-8 h-8 border-4 border-green-200 rounded-full border-t-green-600 animate-spin"></div>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   if (shouldOnboard) {

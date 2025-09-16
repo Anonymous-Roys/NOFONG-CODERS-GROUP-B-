@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiFetch } from '../../utils/api';
 import { requestNotificationPermission, scheduleTaskNotification, registerServiceWorker, showTaskNotification } from '../../utils/notifications';
+import LoadingScreen from '../../components/LoadingScreen';
 
 interface TaskManagerProps {
   onBack?: () => void;
@@ -252,11 +253,7 @@ export const TaskManager: React.FC<TaskManagerProps> = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
-        <div className="w-12 h-12 border-b-2 border-green-600 rounded-full animate-spin"></div>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   return (
