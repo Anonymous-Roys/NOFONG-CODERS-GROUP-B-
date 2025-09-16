@@ -79,7 +79,7 @@ const LoginPage: React.FC = () => {
                 {shouldShowSignup && (
                   <Button 
                     variant="secondary" 
-                    className="mt-2 w-full" 
+                    className="w-full mt-2" 
                     onClick={() => navigate('/signup')}
                   >
                     Go to Sign Up
@@ -105,11 +105,11 @@ const LoginPage: React.FC = () => {
           </div>
 
           <div className="grid gap-3">
-            <Button variant="secondary" className="flex items-center justify-center w-full gap-3">
+            <Button variant="secondary" className="flex items-center justify-center w-full gap-3" disabled>
               <span className="text-lg">G</span>
               Continue with Google
             </Button>
-            <Button variant="secondary" className="flex items-center justify-center w-full gap-3">
+            <Button variant="secondary" className="flex items-center justify-center w-full gap-3" disabled>
               <span className="text-lg"></span>
               Continue with Apple
             </Button>
