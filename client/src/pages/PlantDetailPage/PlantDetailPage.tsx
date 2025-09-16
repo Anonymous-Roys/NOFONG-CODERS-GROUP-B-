@@ -265,35 +265,73 @@ const PlantDetailPage: React.FC = () => {
             <div className="space-y-6">
               <div>
                 <h3 className="mb-4 text-lg font-semibold text-gray-800">Care Instructions</h3>
-                {displayPlant.care ? (
-                  <div className="space-y-4">
-                    {displayPlant.care.water && (
-                      <div className="p-4 rounded-lg bg-gray-50">
-                        <div className="flex items-center mb-2">
-                          <span className="mr-3 text-2xl">{getCareIcon('water')}</span>
-                          <h4 className="font-semibold">Water</h4>
-                        </div>
-                        <div className="space-y-2 text-sm">
-                          {displayPlant.care.water.drySeason && (
-                            <div className="flex items-center">
-                              <span className="mr-2">☀️</span>
-                              <span>{displayPlant.care.water.drySeason}</span>
-                            </div>
-                          )}
-                          {displayPlant.care.water.rainySeason && (
-                            <div className="flex items-center">
-                              <span className="mr-2">🌧️</span>
-                              <span>{displayPlant.care.water.rainySeason}</span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                    {/* Add other care sections similarly */}
+                <div className="space-y-4">
+                  {/* Watering */}
+                  <div className="p-4 rounded-lg bg-blue-50">
+                    <div className="flex items-center mb-2">
+                      <span className="mr-3 text-2xl">💧</span>
+                      <h4 className="font-semibold text-blue-800">Watering</h4>
+                    </div>
+                    <p className="text-sm text-blue-700">
+                      Water when top inch of soil feels dry. Check soil moisture with your finger before watering.
+                    </p>
                   </div>
-                ) : (
-                  <p className="py-4 text-center text-gray-500">No care instructions available.</p>
-                )}
+
+                  {/* Sunlight */}
+                  <div className="p-4 rounded-lg bg-yellow-50">
+                    <div className="flex items-center mb-2">
+                      <span className="mr-3 text-2xl">☀️</span>
+                      <h4 className="font-semibold text-yellow-800">Sunlight</h4>
+                    </div>
+                    <p className="text-sm text-yellow-700">
+                      Provide 6-8 hours of bright, indirect sunlight daily. Rotate plant weekly for even growth.
+                    </p>
+                  </div>
+
+                  {/* Fertilizing */}
+                  <div className="p-4 rounded-lg bg-green-50">
+                    <div className="flex items-center mb-2">
+                      <span className="mr-3 text-2xl">🌱</span>
+                      <h4 className="font-semibold text-green-800">Fertilizing</h4>
+                    </div>
+                    <p className="text-sm text-green-700">
+                      Feed monthly during growing season (spring/summer) with balanced liquid fertilizer.
+                    </p>
+                  </div>
+
+                  {/* Pruning */}
+                  <div className="p-4 rounded-lg bg-purple-50">
+                    <div className="flex items-center mb-2">
+                      <span className="mr-3 text-2xl">✂️</span>
+                      <h4 className="font-semibold text-purple-800">Pruning</h4>
+                    </div>
+                    <p className="text-sm text-purple-700">
+                      Remove dead, damaged, or yellowing leaves regularly. Prune in spring for best results.
+                    </p>
+                  </div>
+
+                  {/* Temperature & Humidity */}
+                  <div className="p-4 rounded-lg bg-gray-50">
+                    <div className="flex items-center mb-2">
+                      <span className="mr-3 text-2xl">🌡️</span>
+                      <h4 className="font-semibold text-gray-800">Temperature & Humidity</h4>
+                    </div>
+                    <p className="text-sm text-gray-700">
+                      Keep at 65-75°F (18-24°C). Increase humidity with a pebble tray or humidifier if needed.
+                    </p>
+                  </div>
+
+                  {/* Repotting */}
+                  <div className="p-4 rounded-lg bg-orange-50">
+                    <div className="flex items-center mb-2">
+                      <span className="mr-3 text-2xl">🪴</span>
+                      <h4 className="font-semibold text-orange-800">Repotting</h4>
+                    </div>
+                    <p className="text-sm text-orange-700">
+                      Repot every 1-2 years or when roots outgrow the pot. Use well-draining potting mix.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           )}

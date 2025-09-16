@@ -279,9 +279,7 @@ export const TaskManager: React.FC<TaskManagerProps> = () => {
           className="p-2"
           title={notificationPermission ? "Notifications enabled" : "Enable notifications"}
         >
-          <svg className="w-6 h-6" fill={notificationPermission ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM9 12l2 2 4-4" />
-          </svg>
+          
         </button>
       </div>
 
